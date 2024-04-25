@@ -13,7 +13,8 @@
     "@heroicons/react": "^2.1.3",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwindcss-hero-patterns": "^0.1.2"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -15,5 +15,6 @@ const config: Config = {
       },
     },
   },
+  plugins: [require("tailwindcss-hero-patterns")],
 };
 export default config;
