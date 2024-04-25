@@ -81,7 +81,8 @@ if (!playerPerformaceResponse.error) {
       const runs = player.runs || 0;
       const fours = player.fours || 0;
       const sixes = player.sixes || 0;
-      const playerPoints = runs + fours * 4 + sixes * 6;
+      const playerPoints =
+        runs + fours * weightage.four + sixes * weightage.six;
       playersPointsMap.set(
         playerName,
         (playersPointsMap.get(playerName) || 0) + playerPoints
@@ -96,7 +97,7 @@ if (!playerPerformaceResponse.error) {
     Object.values(bowlersData).forEach((player) => {
       const playerName = player.bowlName;
       const wickets = player.wickets || 0;
-      const playerPoints = wickets * 25 || 0; // Assuming 25 points per wicket
+      const playerPoints = wickets * weightage.wicket || 0; // Assuming 25 points per wicket
       playersPointsMap.set(
         playerName,
         (playersPointsMap.get(playerName) || 0) + playerPoints
