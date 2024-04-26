@@ -8,7 +8,7 @@ const {
 
 const matchId = args[0];
 
-if (secrets.apiKey == "") {
+if (secrets.pinataKey == "") {
   throw Error("PINATA_API_KEY environment variable not set for Pinata API.");
 }
 if (secrets.cricBuzzKey == "") {
@@ -119,12 +119,15 @@ const pinFileToPinataRequest = Functions.makeHttpRequest({
   url: `https://api.pinata.cloud/pinning/pinJSONToIPFS`,
   method: "POST",
   headers: {
-    Authorization: `Bearer ${secrets.apiKey}`,
+    Authorization: `Bearer ${secrets.pinataKey}`,
     "Content-Type": "application/json",
   },
   data: {
     pinataMetadata: {
       name: "Gameweeek " + matchId,
+    },
+    pinataOptions: {
+      cidVersion: 1,
     },
     pinataContent: {
       points: points,

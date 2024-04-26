@@ -8,8 +8,11 @@ const {
 
 const matchId = args[0];
 
-if (secrets.apiKey == "") {
+if (secrets.pinataKey == "") {
   throw Error("PINATA_API_KEY environment variable not set for Pinata API.");
+}
+if (secrets.cricBuzzKey == "") {
+  throw Error("CRICKET_API_KEY environment variable not set for Cricbuzz API.");
 }
 
 const weightage = {
@@ -60,7 +63,7 @@ const playerPerformaceRequest = Functions.makeHttpRequest({
   url: "https://cricbuzz-cricket.p.rapidapi.com/mcenter/v1/91515/hscard",
   method: "GET",
   headers: {
-    "X-RapidAPI-Key": "your-api-key",
+    "X-RapidAPI-Key": secrets.cricBuzzKey,
     "X-RapidAPI-Host": "cricbuzz-cricket.p.rapidapi.com",
   },
 });
@@ -106,20 +109,25 @@ if (!playerPerformaceResponse.error) {
   });
   const players = [...playersPointsMap.keys()];
   points = [...playersPointsMap.values()];
-
+  console.log("POINTS");
   console.log(points);
+  console.log("PLAYERS");
+  console.log(players);
 }
 
 const pinFileToPinataRequest = Functions.makeHttpRequest({
   url: `https://api.pinata.cloud/pinning/pinJSONToIPFS`,
   method: "POST",
   headers: {
-    Authorization: `Bearer ${secrets.apiKey}`,
+    Authorization: `Bearer ${secrets.pinataKey}`,
     "Content-Type": "application/json",
   },
   data: {
     pinataMetadata: {
-      name: "Gameweeek" + matchId,
+      name: "Gameweeek " + matchId,
+    },
+    pinataOptions: {
+      cidVersion: 1,
     },
     pinataContent: {
       points: points,
@@ -131,11 +139,13 @@ const [pinFileToPinataResponse] = await Promise.all([pinFileToPinataRequest]);
 
 console.log(pinFileToPinataResponse);
 const merkleRoot = computeMerkleRoot(padArrayWithZeros(points));
+console.log("MERKLE ROOT");
 console.log(merkleRoot);
 const returnDataHex = encodeAbiParameters(
   parseAbiParameters("bytes32, string"),
   [merkleRoot, pinFileToPinataResponse.data.IpfsHash]
 );
+console.log("RETURN DATA HEX");
 console.log(returnDataHex);
 
 return hexToBytes(returnDataHex);
