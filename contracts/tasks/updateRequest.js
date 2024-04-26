@@ -28,7 +28,7 @@ const updateRequest = async () => {
   const gameWeek = 1;
   // Initialize functions settings
   const source = fs
-    .readFileSync(path.resolve(__dirname, "zkricket-oracle.js"))
+    .readFileSync(path.resolve(__dirname, "oracle-script.js"))
     .toString();
 
   const args = [gameWeek.toString()]; // args - arguments can be encoded off-chain to bytes.
