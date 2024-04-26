@@ -14,7 +14,7 @@ const ethers = require("ethers");
 const { networks } = require("../networks");
 require("@chainlink/env-enc").config();
 
-const luffyProtocolAddress = ""; // REPLACE this with your Functions consumer address
+const zkricketAddress = ""; // REPLACE this with your Functions consumer address
 const subscriptionId = 37; // REPLACE this with your subscription ID
 
 const updateRequest = async () => {
@@ -28,7 +28,7 @@ const updateRequest = async () => {
   const gameWeek = 1;
   // Initialize functions settings
   const source = fs
-    .readFileSync(path.resolve(__dirname, "luffy-oracle.js"))
+    .readFileSync(path.resolve(__dirname, "zkricket-oracle.js"))
     .toString();
 
   const args = [gameWeek.toString()]; // args - arguments can be encoded off-chain to bytes.
@@ -123,7 +123,7 @@ const updateRequest = async () => {
     }); // encode encrypted secrets version
 
   const automatedFunctionsConsumer = new ethers.Contract(
-    luffyProtocolAddress,
+    zkricketAddress,
     testChainlink.abi,
     signer
   );

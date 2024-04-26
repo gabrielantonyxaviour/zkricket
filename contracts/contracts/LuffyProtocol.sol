@@ -22,12 +22,12 @@ error NotAllowedCaller(
 error UnexpectedRequestID(bytes32 requestId);
 error ResultsNotPublished(uint256 gameweek);
 
-contract LuffyProtocol is FunctionsClient, ConfirmedOwner {
+contract ZkCricket is FunctionsClient, ConfirmedOwner {
     // Library Imports
     using Strings for uint256;
     using FunctionsRequest for FunctionsRequest.Request;  
 
-    // Luffy Protocol Variables
+    // ZkCricket Variables
     mapping(uint256=>mapping(address=>bytes32)) public gameWeekToSquadHash;
     mapping(uint256=>string) public gameWeekResults;
     mapping(uint256=>mapping(uint256=>uint256)) public playerPoints;
@@ -66,7 +66,7 @@ contract LuffyProtocol is FunctionsClient, ConfirmedOwner {
         // Hyperlane Initializations
         mailbox = _mailbox;
 
-        // Luffy Protocol Initializations
+        // ZkCricket Initializations
         isSelectSquadEnabled = true;
         isZkVerificationEnabled = false;
         gameweekCounter = 1;

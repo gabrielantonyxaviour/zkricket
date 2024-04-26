@@ -1,6 +1,6 @@
 const { networks } = require("../../networks");
 
-task("deploy-protocol", "Deploys the LuffyProtocol contract")
+task("deploy-protocol", "Deploys the ZkCricket contract")
   .addOptionalParam(
     "verify",
     "Set to true to verify contract",
@@ -8,7 +8,7 @@ task("deploy-protocol", "Deploys the LuffyProtocol contract")
     types.boolean
   )
   .setAction(async (taskArgs) => {
-    console.log(`Deploying LuffyProtocol contract to ${network.name}`);
+    console.log(`Deploying ZkCricket contract to ${network.name}`);
 
     console.log("\n__Compiling Contracts__");
     await run("compile");
@@ -20,7 +20,7 @@ task("deploy-protocol", "Deploys the LuffyProtocol contract")
     ];
 
     const protocolContractFactory = await ethers.getContractFactory(
-      "LuffyProtocol"
+      "ZkCricketProtocol"
     );
     const protocolContract = await protocolContractFactory.deploy(...args);
 
@@ -36,10 +36,7 @@ task("deploy-protocol", "Deploys the LuffyProtocol contract")
       networks[network.name].confirmations
     );
 
-    console.log(
-      "\nDeployed LuffyProtocol contract to:",
-      protocolContract.address
-    );
+    console.log("\nDeployed ZkCricket contract to:", protocolContract.address);
 
     if (network.name === "localFunctionsTestnet") {
       return;
@@ -76,6 +73,6 @@ task("deploy-protocol", "Deploys the LuffyProtocol contract")
     }
 
     console.log(
-      `\n LuffyProtocol contract deployed to ${protocolContract.address} on ${network.name}`
+      `\n ZkCricket contract deployed to ${protocolContract.address} on ${network.name}`
     );
   });
