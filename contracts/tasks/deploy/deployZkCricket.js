@@ -20,7 +20,7 @@ task("deploy-protocol", "Deploys the ZkCricket contract")
     ];
 
     const protocolContractFactory = await ethers.getContractFactory(
-      "ZkCricketProtocol"
+      "ZkCricket"
     );
     const protocolContract = await protocolContractFactory.deploy(...args);
 
