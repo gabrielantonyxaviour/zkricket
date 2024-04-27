@@ -14,7 +14,7 @@ const ethers = require("ethers");
 const { networks } = require("../networks");
 require("@chainlink/env-enc").config();
 
-const luffyProtocolAddress = "0x88854958eCE14EF7AC63AC684AAF19f7D9e84233"; // REPLACE this with your Functions consumer address
+const zkricketAddress = "0x88854958eCE14EF7AC63AC684AAF19f7D9e84233"; // REPLACE this with your Functions consumer address
 const subscriptionId = 37; // REPLACE this with your subscription ID
 
 const updateRequest = async () => {
@@ -123,7 +123,7 @@ const updateRequest = async () => {
     }); // encode encrypted secrets version
 
   const automatedFunctionsConsumer = new ethers.Contract(
-    luffyProtocolAddress,
+    zkricketAddress,
     testChainlink.abi,
     signer
   );
