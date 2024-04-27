@@ -1,3 +1,4 @@
+mod tests;
 use dep::std;
 use dep::ecrecover;
 
