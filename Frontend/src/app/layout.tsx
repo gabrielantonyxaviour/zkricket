@@ -18,9 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Nav />
-      <body className={jksans.className}>{children}</body>
-      <Footer />
+      <body>
+        <Nav />
+        <div className={jksans.className}>{children}</div>
+        <Footer />
+      </body>
     </html>
   );
 }
