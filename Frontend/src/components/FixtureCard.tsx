@@ -1,4 +1,5 @@
 import { PlusIcon, ChartBarIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 
 export default function FixtureCard(props: {
   fixtures: {
@@ -47,35 +48,43 @@ export default function FixtureCard(props: {
                 </div>
                 <img
                   className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                  src={person.imageUrl}
+                  src={`/${person.team1}.png`}
                   alt=""
                 />
                 <img
                   className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                  src={person.imageUrl}
+                  src={`/${person.team2}.png`}
                   alt=""
                 />
               </div>
               <div>
                 <div className="-mt-px flex divide-x divide-gray-200">
                   <div className="flex w-0 flex-1">
-                    <a className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                    <Link
+                      href={`/leaderboard/${person.fid}`}
+                      className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
+                    >
+                      {" "}
                       <ChartBarIcon
                         className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
                       View Leaderboard
-                    </a>
+                    </Link>
                   </div>
+
                   {!completed && (
                     <div className="-ml-px flex w-0 flex-1">
-                      <a className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                      <Link
+                        href={`/makesquad/${person.fid}`}
+                        className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
+                      >
                         <PlusIcon
                           className="h-5 w-5 text-gray-400"
                           aria-hidden="true"
                         />
                         Make Squad
-                      </a>
+                      </Link>
                     </div>
                   )}
                 </div>

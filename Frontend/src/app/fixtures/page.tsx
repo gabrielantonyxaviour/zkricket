@@ -34,7 +34,7 @@ const Upcoming = [
   {
     fid: 4,
     team1: "CSK",
-    team2: "KKR",
+    team2: "LSG",
     name: "Jane Cooper",
     title: "Indian Primere League",
     role: "Entries Open",
