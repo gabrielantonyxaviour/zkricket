@@ -6,32 +6,24 @@ const Upcoming = [
     team1: "CSK",
     team2: "MI",
     title: "Indian Primere League",
-    role: "Entries Open",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
   },
   {
     fid: 2,
     team1: "CSK",
     team2: "RCB",
     title: "Indian Primere League",
-    role: "Entries Open",
   },
   {
     fid: 3,
     team1: "CSK",
     team2: "DC",
-    name: "Jane Cooper",
     title: "Indian Primere League",
-    role: "Entries Open",
   },
   {
     fid: 4,
     team1: "CSK",
     team2: "LSG",
-    name: "Jane Cooper",
     title: "Indian Primere League",
-    role: "Entries Open",
   },
 ];
 function page() {
@@ -47,7 +39,9 @@ function page() {
           </p>
         </div>
       </div>
-      <FixtureCard fixtures={Upcoming} completed={false} />
+      <div className="px-52 bg-white">
+        <FixtureCard fixtures={Upcoming} completed={false} />
+      </div>
       <div className="bg-white px-6 py-6 sm:pt-32 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
@@ -58,7 +52,9 @@ function page() {
           </p>
         </div>
       </div>
-      <FixtureCard fixtures={Upcoming} completed={true} />
+      <div className="px-52 bg-white">
+        <FixtureCard fixtures={Upcoming} completed={true} />
+      </div>
     </div>
   );
 }
