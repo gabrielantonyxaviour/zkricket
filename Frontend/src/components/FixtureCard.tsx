@@ -8,7 +8,6 @@ export default function FixtureCard(props: {
     team2: string;
     title: string;
     role: string;
-    imageUrl: string;
   }[];
   completed: boolean;
 }) {
@@ -47,12 +46,12 @@ export default function FixtureCard(props: {
                   </p>
                 </div>
                 <img
-                  className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
+                  className="h-8  flex-shrink-0 "
                   src={`/${person.team1}.png`}
                   alt=""
                 />
                 <img
-                  className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
+                  className="h-8 flex-shrink-0  "
                   src={`/${person.team2}.png`}
                   alt=""
                 />

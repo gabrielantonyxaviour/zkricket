@@ -16,9 +16,6 @@ const Upcoming = [
     team2: "RCB",
     title: "Indian Primere League",
     role: "Entries Open",
-
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
   },
   {
     fid: 3,
@@ -27,9 +24,6 @@ const Upcoming = [
     name: "Jane Cooper",
     title: "Indian Primere League",
     role: "Entries Open",
-
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
   },
   {
     fid: 4,
@@ -38,8 +32,6 @@ const Upcoming = [
     name: "Jane Cooper",
     title: "Indian Primere League",
     role: "Entries Open",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
   },
 ];
 function page() {
