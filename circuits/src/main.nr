@@ -4,17 +4,38 @@ use dep::ecrecover;
 
 global MERKLE_DEPTH = 6;
 fn main(
+    signer_pub_x_key: [u8; 32],
+    signer_pub_y_key: [u8; 32],
+    signature: [u8; 64],
     selected_player_ids: [u8; 11],
     selected_players_points: [[u8; 32]; 11],
     player_points_merkle_paths: [[[u8; 32]; MERKLE_DEPTH]; 11],
-    all_player_points_merkle_root: [u8; 32]
+    all_player_points_merkle_root: [u8; 32],
+    selected_squad_hash: pub [u8; 32],
+    claimed_player_points: pub u64
 ) {
+    ecdsa_verification(
+        signer_pub_x_key,
+        signer_pub_y_key,
+        signature,
+        selected_squad_hash
+    );
+
     verify_all_merkle_roots(
         selected_player_ids,
         selected_players_points,
         player_points_merkle_paths,
         all_player_points_merkle_root
     );
+
+    let mut calculated_total_points: u64 = 0;
+
+    for point in selected_players_points {
+        for byte in point {
+            calculated_total_points += byte as u64;
+        }
+    }
+    assert(calculated_total_points == claimed_player_points);
 }
 
 fn ecdsa_verification(
@@ -31,13 +52,15 @@ fn ecdsa_verification(
     assert(computedAddress == recoveredAddress);
 }
 
-fn concatenate_leafs(leaf1: [u8; 32], leaf2: [u8; 32]) -> [u8; 64] {
-    let mut arr: [u8; 64] = [0; 64];
-    for i in 0..32 {
-        arr[i] = leaf1[i];
-        arr[i + 32] = leaf2[i];
+fn verify_all_merkle_roots(
+    player_ids: [u8; 11],
+    players_points: [[u8; 32]; 11],
+    merkle_paths: [[[u8; 32]; MERKLE_DEPTH]; 11],
+    merkle_root: [u8; 32]
+) {
+    for i in 0..11 {
+        compute_and_verify_merkle_root(players_points[i], player_ids[i], merkle_paths[i], merkle_root);
     }
-    arr
 }
 
 fn compute_and_verify_merkle_root(
@@ -63,13 +86,11 @@ fn compute_and_verify_merkle_root(
     assert(computed_merkle_root == all_points_merkle_root);
 }
 
-fn verify_all_merkle_roots(
-    player_ids: [u8; 11],
-    players_points: [[u8; 32]; 11],
-    merkle_paths: [[[u8; 32]; MERKLE_DEPTH]; 11],
-    merkle_root: [u8; 32]
-) {
-    for i in 0..11 {
-        compute_and_verify_merkle_root(players_points[i], player_ids[i], merkle_paths[i], merkle_root);
+fn concatenate_leafs(leaf1: [u8; 32], leaf2: [u8; 32]) -> [u8; 64] {
+    let mut arr: [u8; 64] = [0; 64];
+    for i in 0..32 {
+        arr[i] = leaf1[i];
+        arr[i + 32] = leaf2[i];
     }
+    arr
 }
