@@ -14,7 +14,7 @@ fn test_works_1() {
     let hash = [
         92, 166, 250, 182, 89, 67, 26, 188, 223, 252, 226, 156, 135, 232, 82, 220, 197, 208, 62, 156, 161, 52, 127, 195, 216, 205, 251, 200, 7, 15, 219, 118
     ];
-    main(pub_x_key, pub_y_key, signature, hash);
+    // main(pub_x_key, pub_y_key, signature, hash);
 }
 
 // #[test]

@@ -7,6 +7,7 @@ const {
 } = await import("npm:viem");
 
 const matchId = args[0];
+// const playerIdsRemmaping = args[1];
 
 if (secrets.pinataKey == "") {
   throw Error("PINATA_API_KEY environment variable not set for Pinata API.");
@@ -70,26 +71,21 @@ const playerPerformaceRequest = Functions.makeHttpRequest({
 
 const [playerPerformaceResponse] = await Promise.all([playerPerformaceRequest]);
 
-let points = [];
+let points = new Array(32).fill(0);
 
 if (!playerPerformaceResponse.error) {
   console.log("Player performance API success");
-  let playersPointsMap = new Map();
+
   [
     playerPerformaceResponse.data.scoreCard[0].batTeamDetails.batsmenData,
     playerPerformaceResponse.data.scoreCard[1].batTeamDetails.batsmenData,
   ].forEach((batsmenData) => {
     Object.values(batsmenData).forEach((player) => {
-      const playerName = player.batName;
+      const playerId = player.batId;
       const runs = player.runs || 0;
       const fours = player.fours || 0;
       const sixes = player.sixes || 0;
-      const playerPoints =
-        runs + fours * weightage.four + sixes * weightage.six;
-      playersPointsMap.set(
-        playerName,
-        (playersPointsMap.get(playerName) || 0) + playerPoints
-      );
+      points[playerId] += runs + fours * weightage.four + sixes * weightage.six;
     });
   });
   // Process bowlers data
@@ -98,21 +94,18 @@ if (!playerPerformaceResponse.error) {
     playerPerformaceResponse.data.scoreCard[1].bowlTeamDetails.bowlersData,
   ].forEach((bowlersData) => {
     Object.values(bowlersData).forEach((player) => {
-      const playerName = player.bowlName;
+      const playerId = player.bowlerId;
       const wickets = player.wickets || 0;
-      const playerPoints = wickets * weightage.wicket || 0; // Assuming 25 points per wicket
-      playersPointsMap.set(
-        playerName,
-        (playersPointsMap.get(playerName) || 0) + playerPoints
-      );
+      const playerPoints = wickets * weightage.wicket; // Assuming 25 points per wicket
+      points[playerId] += playerPoints;
     });
   });
   const players = [...playersPointsMap.keys()];
   points = [...playersPointsMap.values()];
-  console.log("POINTS");
-  console.log(points);
-  console.log("PLAYERS");
-  console.log(players);
+  // console.log("POINTS");
+  // console.log(points);
+  // console.log("PLAYERS");
+  // console.log(players);
 }
 
 const pinFileToPinataRequest = Functions.makeHttpRequest({
@@ -135,15 +128,15 @@ const pinFileToPinataRequest = Functions.makeHttpRequest({
   },
 });
 
-const [pinFileToPinataResponse] = await Promise.all([pinFileToPinataRequest]);
+// const [pinFileToPinataResponse] = await Promise.all([pinFileToPinataRequest]);
 
-console.log(pinFileToPinataResponse);
+// console.log(pinFileToPinataResponse);
 const merkleRoot = computeMerkleRoot(padArrayWithZeros(points));
-console.log("MERKLE ROOT");
-console.log(merkleRoot);
+// console.log("MERKLE ROOT");
+// console.log(merkleRoot);
 const returnDataHex = encodeAbiParameters(
   parseAbiParameters("bytes32, string"),
-  [merkleRoot, pinFileToPinataResponse.data.IpfsHash]
+  [merkleRoot, "pinFileToPinataResponse.data.IpfsHash"]
 );
 console.log("RETURN DATA HEX");
 console.log(returnDataHex);
