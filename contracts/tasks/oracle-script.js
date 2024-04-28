@@ -7,7 +7,7 @@ const {
 } = await import("npm:viem");
 
 const matchId = args[0];
-// const playerIdsRemmaping = args[1];
+const playerIdsRemmaping = args[1];
 
 if (secrets.pinataKey == "") {
   throw Error("PINATA_API_KEY environment variable not set for Pinata API.");
@@ -71,7 +71,7 @@ const playerPerformaceRequest = Functions.makeHttpRequest({
 
 const [playerPerformaceResponse] = await Promise.all([playerPerformaceRequest]);
 
-let points = new Array(32).fill(0);
+let points = new Array(64).fill(0);
 
 if (!playerPerformaceResponse.error) {
   console.log("Player performance API success");
@@ -85,7 +85,8 @@ if (!playerPerformaceResponse.error) {
       const runs = player.runs || 0;
       const fours = player.fours || 0;
       const sixes = player.sixes || 0;
-      points[playerId] += runs + fours * weightage.four + sixes * weightage.six;
+      points[playerIdsRemmaping[playerId]] +=
+        runs + fours * weightage.four + sixes * weightage.six;
     });
   });
   // Process bowlers data
@@ -97,7 +98,7 @@ if (!playerPerformaceResponse.error) {
       const playerId = player.bowlerId;
       const wickets = player.wickets || 0;
       const playerPoints = wickets * weightage.wicket; // Assuming 25 points per wicket
-      points[playerId] += playerPoints;
+      points[playerIdsRemmaping[playerId]] += playerPoints;
     });
   });
   const players = [...playersPointsMap.keys()];
