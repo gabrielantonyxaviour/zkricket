@@ -15,7 +15,10 @@ task("simulate", "Simulates the Oracle function").setAction(
       .readFileSync(path.resolve(__dirname, "oracle-script.js"))
       .toString();
 
-    const args = ["1"];
+    const args = [
+      "91515",
+      "https://amethyst-impossible-ptarmigan-368.mypinata.cloud/ipfs/Qmb1ZQWyzZCHSpH4rVn5XCYtbRCemxn3Ed6K659XvmN4B3?pinataGatewayToken=CUMCxB7dqGB8wEEQqGSGd9u1edmJpWmR9b0Oiuewyt5gs633nKmTogRoKZMrG4Vk",
+    ];
     const secrets = {
       pinataKey: process.env.PINATA_API_KEY || "",
       cricBuzzKey: process.env.CRICKET_API_KEY || "",

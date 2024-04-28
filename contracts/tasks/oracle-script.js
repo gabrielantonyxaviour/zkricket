@@ -60,8 +60,17 @@ function padArrayWithZeros(array) {
   );
 }
 
-const playerPerformaceRequest = Functions.makeHttpRequest({
-  url: "https://cricbuzz-cricket.p.rapidapi.com/mcenter/v1/91515/hscard",
+const playerIdsRemmapingRequest = Functions.makeHttpRequest({
+  url: playerIdsRemmaping,
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const playerPerformanceRequest = Functions.makeHttpRequest({
+  url:
+    "https://cricbuzz-cricket.p.rapidapi.com/mcenter/v1/" + matchId + "/hscard",
   method: "GET",
   headers: {
     "X-RapidAPI-Key": secrets.cricBuzzKey,
@@ -69,44 +78,38 @@ const playerPerformaceRequest = Functions.makeHttpRequest({
   },
 });
 
-const [playerPerformaceResponse] = await Promise.all([playerPerformaceRequest]);
-
+const [playerPerformanceResponse, playerIdsRemmapingResponse] =
+  await Promise.all([playerPerformanceRequest, playerIdsRemmapingRequest]);
 let points = new Array(64).fill(0);
 
-if (!playerPerformaceResponse.error) {
+if (!playerPerformanceResponse.error) {
   console.log("Player performance API success");
 
   [
-    playerPerformaceResponse.data.scoreCard[0].batTeamDetails.batsmenData,
-    playerPerformaceResponse.data.scoreCard[1].batTeamDetails.batsmenData,
+    playerPerformanceResponse.data.scoreCard[0].batTeamDetails.batsmenData,
+    playerPerformanceResponse.data.scoreCard[1].batTeamDetails.batsmenData,
   ].forEach((batsmenData) => {
     Object.values(batsmenData).forEach((player) => {
       const playerId = player.batId;
       const runs = player.runs || 0;
       const fours = player.fours || 0;
       const sixes = player.sixes || 0;
-      points[playerIdsRemmaping[playerId]] +=
+      points[playerIdsRemmapingResponse.data[playerId]] +=
         runs + fours * weightage.four + sixes * weightage.six;
     });
   });
   // Process bowlers data
   [
-    playerPerformaceResponse.data.scoreCard[0].bowlTeamDetails.bowlersData,
-    playerPerformaceResponse.data.scoreCard[1].bowlTeamDetails.bowlersData,
+    playerPerformanceResponse.data.scoreCard[0].bowlTeamDetails.bowlersData,
+    playerPerformanceResponse.data.scoreCard[1].bowlTeamDetails.bowlersData,
   ].forEach((bowlersData) => {
     Object.values(bowlersData).forEach((player) => {
       const playerId = player.bowlerId;
       const wickets = player.wickets || 0;
       const playerPoints = wickets * weightage.wicket; // Assuming 25 points per wicket
-      points[playerIdsRemmaping[playerId]] += playerPoints;
+      points[playerIdsRemmapingResponse.data[playerId]] += playerPoints;
     });
   });
-  const players = [...playersPointsMap.keys()];
-  points = [...playersPointsMap.values()];
-  // console.log("POINTS");
-  // console.log(points);
-  // console.log("PLAYERS");
-  // console.log(players);
 }
 
 const pinFileToPinataRequest = Functions.makeHttpRequest({
@@ -129,17 +132,12 @@ const pinFileToPinataRequest = Functions.makeHttpRequest({
   },
 });
 
-// const [pinFileToPinataResponse] = await Promise.all([pinFileToPinataRequest]);
+const [pinFileToPinataResponse] = await Promise.all([pinFileToPinataRequest]);
 
-// console.log(pinFileToPinataResponse);
 const merkleRoot = computeMerkleRoot(padArrayWithZeros(points));
-// console.log("MERKLE ROOT");
-// console.log(merkleRoot);
 const returnDataHex = encodeAbiParameters(
   parseAbiParameters("bytes32, string"),
-  [merkleRoot, "pinFileToPinataResponse.data.IpfsHash"]
+  [merkleRoot, pinFileToPinataResponse.data.IpfsHash]
 );
-console.log("RETURN DATA HEX");
-console.log(returnDataHex);
 
 return hexToBytes(returnDataHex);
