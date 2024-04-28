@@ -4,8 +4,18 @@ use dep::ecrecover;
 
 global MERKLE_DEPTH = 6;
 fn main(
-    
-) {}
+    selected_player_ids: [u8; 11],
+    selected_players_points: [[u8; 32]; 11],
+    player_points_merkle_paths: [[[u8; 32]; MERKLE_DEPTH]; 11],
+    all_player_points_merkle_root: [u8; 32]
+) {
+    verify_all_merkle_roots(
+        selected_player_ids,
+        selected_players_points,
+        player_points_merkle_paths,
+        all_player_points_merkle_root
+    );
+}
 
 fn ecdsa_verification(
     signer_pub_x_key: [u8; 32],
@@ -51,4 +61,15 @@ fn compute_and_verify_merkle_root(
     println(f"Computed merkle root: {computed_merkle_root}");
     println(f"All points merkle root: {all_points_merkle_root}");
     assert(computed_merkle_root == all_points_merkle_root);
+}
+
+fn verify_all_merkle_roots(
+    player_ids: [u8; 11],
+    players_points: [[u8; 32]; 11],
+    merkle_paths: [[[u8; 32]; MERKLE_DEPTH]; 11],
+    merkle_root: [u8; 32]
+) {
+    for i in 0..11 {
+        compute_and_verify_merkle_root(players_points[i], player_ids[i], merkle_paths[i], merkle_root);
+    }
 }
