@@ -117,7 +117,6 @@ task(
           reject(error); // Indicate that an error occurred while waiting for fulfillment.
         });
     });
-
     const fulfillmentCode = response.fulfillmentCode;
 
     if (fulfillmentCode === FulfillmentCode.FULFILLED) {
