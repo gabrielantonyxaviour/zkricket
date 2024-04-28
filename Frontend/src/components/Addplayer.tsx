@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { teams } from "@/data/teams";
 
 export default function Addplayer(props: {
   index: number;
@@ -17,33 +18,66 @@ export default function Addplayer(props: {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const index = props.index;
-  const teams = props.teams;
+  const team = props.teams;
   const open = props.open;
   const setOpen = props.setOpen;
+  interface Player {
+    id?: string;
+    name: string;
+    captain?: boolean;
+    role?: string;
+    imageId?: number;
+    battingStyle?: string;
+    bowlingStyle?: string;
+  }
   const [role, setRole] = useState("");
+  const [player, setPlayer] = useState<Player[]>([]); // Fix the missing 'Player' type
   useEffect(() => {
     if (index === 10) {
+      setPlayer(
+        teams.csk.player.filter((player) => player.role === "WK-Batter")
+      );
       setRole("Wicket Keeper");
     } else if (index >= 6) {
+      setPlayer(
+        teams.csk.player.filter(
+          (player) => player.role === "Batting Allrounder"
+        )
+      );
       setRole("All Rounder");
     } else if (index >= 3) {
+      setPlayer(teams.csk.player.filter((player) => player.role === "Bowler"));
       setRole("Bowler");
     } else {
+      setPlayer(teams.csk.player.filter((player) => player.role === "Batter"));
       setRole("Batsman");
     }
   }, [index]);
+  const getImage = async (id: number): Promise<string> => {
+    const url = `https://cricbuzz-cricket.p.rapidapi.com/stats/v1/player/${id}`;
+    const headers: HeadersInit = {
+      "X-RapidAPI-Key": process.env.CRICKET_API || "", // Ensure process.env.CRICKET_API is not undefined
+      "X-RapidAPI-Host": "cricbuzz-cricket.p.rapidapi.com",
+    };
 
-  const player = [
-    {
-      name: "Virat Kholi",
-      title: "RCB",
-      department: "All Rounder",
-      email: "18",
-      role: "All Rounder",
-      image:
-        "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  ];
+    const options: RequestInit = {
+      method: "GET",
+      headers: headers,
+    };
+
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      return data.image || null; // Return image URL or null if not found
+    } catch (error) {
+      console.error(error); // Log the error
+      return ""; // Return null in case of error
+    }
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -120,15 +154,15 @@ export default function Addplayer(props: {
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-white">
                             {player.map((person) => (
-                              <tr key={person.email}>
+                              <tr key={person.id}>
                                 <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                   <div className="flex items-center">
                                     <div className="h-11 w-11 flex-shrink-0">
-                                      <img
+                                      {/* <img
                                         className="h-11 w-11 rounded-full"
-                                        src={person.image}
+                                        src={getImage(person.imageId) }
                                         alt=""
-                                      />
+                                      /> */}
                                     </div>
                                     <div className="ml-4">
                                       <div className="font-medium text-gray-900">
@@ -139,7 +173,8 @@ export default function Addplayer(props: {
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                   <div className="text-gray-900">
-                                    {person.title}
+                                    {/* {person.team} */}
+                                    rcb
                                   </div>
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
