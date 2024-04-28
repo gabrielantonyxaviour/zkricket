@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   description: "A zero-knowledge fantasy cricket platform",
 };
 
+import {
+  DynamicContextProvider,
+  EthereumWalletConnectors,
+} from "../lib/dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -18,11 +23,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Nav />
-        <div className={jksans.className}>{children}</div>
-        <Footer />
-      </body>
+      <DynamicContextProvider
+        settings={{
+          environmentId: "2762a57b-faa4-41ce-9f16-abff9300e2c9",
+          walletConnectors: [EthereumWalletConnectors],
+        }}
+      >
+        <body>
+          <Nav />
+          <div className={jksans.className}>{children}</div>
+          <Footer />
+        </body>
+      </DynamicContextProvider>
     </html>
   );
 }
