@@ -25,67 +25,16 @@ interface PitchProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   index: number;
   setindex: React.Dispatch<React.SetStateAction<number>>;
+  playerPositions: Player[];
 }
 
-const Pitch: React.FC<PitchProps> = ({ open, setOpen, setindex, index }) => {
-  const [playerPositions, setPlayerPositions] = useState<Player[]>([
-    {
-      name: "Choose Player",
-      type: "bat",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "bat",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "bat",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "bowl",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "bowl",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "bowl",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "ar",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "ar",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "ar",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "ar",
-      team: "plain",
-    },
-    {
-      name: "Choose Player",
-      type: "wk",
-      team: "plain",
-    },
-  ]);
-
+const Pitch: React.FC<PitchProps> = ({
+  open,
+  setOpen,
+  setindex,
+  index,
+  playerPositions,
+}) => {
   const handlePlayerClick = (index: number) => {
     console.log("Player", index, "clicked");
     setindex(index);
@@ -134,16 +83,29 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
 }) => {
   return (
     <>
-      <img
-        src={`/players/${player.team}/${player.type}.png`}
-        alt={`Player ${index + 1}`}
-        className="absolute cursor-pointer w-20"
-        onClick={onClick}
-        style={{
-          top: calculateTopPosition(index),
-          left: calculateLeftPosition(index),
-        }}
-      />
+      {player.team == "plain" ? (
+        <img
+          src={`/players/plain/${player.type}.png`}
+          alt={`Player ${index + 1}`}
+          className="absolute cursor-pointer w-20"
+          onClick={onClick}
+          style={{
+            top: calculateTopPosition(index),
+            left: calculateLeftPosition(index),
+          }}
+        />
+      ) : (
+        <img
+          src={`/players/${player.team}/${player.type}.png`}
+          alt={`Player ${index + 1}`}
+          className="absolute cursor-pointer w-20"
+          onClick={onClick}
+          style={{
+            top: calculateTopPosition(index),
+            left: calculateLeftPosition(index),
+          }}
+        />
+      )}
       <div
         className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black  rounded-md"
         onClick={onClick}

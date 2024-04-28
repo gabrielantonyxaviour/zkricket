@@ -9,13 +9,94 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [index, setindex] = useState(0);
   const [teams, setteams] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
+  interface Player {
+    name: string;
+    team:
+      | "plain"
+      | "csk"
+      | "rcb"
+      | "mi"
+      | "dc"
+      | "kkr"
+      | "pbks"
+      | "rr"
+      | "srh"
+      | "gt"
+      | "lsg"
+      | "pkbs"
+      | "dc";
+    type: "bat" | "bowl" | "ar" | "wk";
+  }
+  const [playerPositions, setPlayerPositions] = useState<Player[]>([
+    {
+      name: "Choose Player",
+      type: "bat",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "bat",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "bat",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "bowl",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "bowl",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "bowl",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "ar",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "ar",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "ar",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "ar",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+      type: "wk",
+      team: "plain",
+    },
+  ]);
 
   useEffect(() => {
     setteams(["CSK", "RCB"]);
   }, []);
   return (
     <>
-      <Addplayer index={index} teams={teams} open={open} setOpen={setOpen} />
+      <Addplayer
+        index={index}
+        teams={teams}
+        open={open}
+        setOpen={setOpen}
+        setPlayerPositions={setPlayerPositions}
+      />
       <div className="pt-10 bg-white">
         <div className="flex flex-row">
           <Link href={"/fixtures"}>
@@ -35,6 +116,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           setindex={setindex}
           open={open}
           setOpen={setOpen}
+          playerPositions={playerPositions}
         />
         <div className="flex items-center justify-center">
           <div className="mt-10 flex items-center gap-x-6">
