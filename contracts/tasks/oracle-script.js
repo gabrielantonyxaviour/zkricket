@@ -24,8 +24,8 @@ const weightage = {
 };
 
 function computeMerkleRoot(points) {
-  const hashedValues = points.map((point) =>
-    keccak256(`0x${point.toString(16)}`)
+  const hexValues = points.map((point) =>
+    keccak256(`0x${point.toString(16).padStart(64, "0")}`)
   );
 
   function recursiveMerkleRoot(hashes) {
@@ -50,7 +50,7 @@ function computeMerkleRoot(points) {
   }
 
   // Start the recursive computation
-  return recursiveMerkleRoot(hashedValues);
+  return recursiveMerkleRoot(hexValues);
 }
 
 function padArrayWithZeros(array) {
@@ -135,6 +135,7 @@ const pinFileToPinataRequest = Functions.makeHttpRequest({
 const [pinFileToPinataResponse] = await Promise.all([pinFileToPinataRequest]);
 
 const merkleRoot = computeMerkleRoot(padArrayWithZeros(points));
+console.log(merkleRoot);
 const returnDataHex = encodeAbiParameters(
   parseAbiParameters("bytes32, string"),
   [merkleRoot, pinFileToPinataResponse.data.IpfsHash]

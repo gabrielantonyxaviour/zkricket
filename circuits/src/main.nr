@@ -2,19 +2,10 @@ mod tests;
 use dep::std;
 use dep::ecrecover;
 
-global MERKLE_DEPTH = 4;
-fn main(leaf: [u8; 32], leaf_index: u8, proof: [[u8; 32]; MERKLE_DEPTH], hash: [u8; 32]) {
-    let mut computed_hash: [u8; 32] = [0; 32];
-    computed_hash=leaf;
-    for i in 0..MERKLE_DEPTH {
-        if leaf_index % 2 == 0 {
-            computed_hash = std::hash::keccak256(concatenate_leafs(computed_hash, proof[i]), 64);
-        } else {
-            computed_hash = std::hash::keccak256(concatenate_leafs(proof[i], computed_hash), 64);
-        }
-    }
-    assert(computed_hash == hash);
-}
+global MERKLE_DEPTH = 6;
+fn main(
+    
+) {}
 
 fn ecdsa_verification(
     signer_pub_x_key: [u8; 32],
@@ -37,4 +28,27 @@ fn concatenate_leafs(leaf1: [u8; 32], leaf2: [u8; 32]) -> [u8; 64] {
         arr[i + 32] = leaf2[i];
     }
     arr
+}
+
+fn compute_and_verify_merkle_root(
+    leaf: [u8; 32],
+    leaf_index: u8,
+    proof: [[u8; 32]; MERKLE_DEPTH],
+    all_points_merkle_root: [u8; 32]
+) {
+    let mut computed_merkle_root: [u8; 32] = [0; 32];
+    computed_merkle_root=leaf;
+    let mut leaf_index_mut= leaf_index;
+    for i in 0..MERKLE_DEPTH {
+        if leaf_index_mut % 2 == 0 {
+            computed_merkle_root = std::hash::keccak256(concatenate_leafs(computed_merkle_root, proof[i]), 64);
+        } else {
+            computed_merkle_root = std::hash::keccak256(concatenate_leafs(proof[i], computed_merkle_root), 64);
+        }
+        leaf_index_mut = leaf_index_mut / 2;
+    }
+
+    println(f"Computed merkle root: {computed_merkle_root}");
+    println(f"All points merkle root: {all_points_merkle_root}");
+    assert(computed_merkle_root == all_points_merkle_root);
 }
