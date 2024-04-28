@@ -1,5 +1,26 @@
 "use client";
+import { useState, useEffect } from "react";
+import { useAccount } from "wagmi";
+
+import AnkrModal from "./AnkrModal";
+
 export default function Hero() {
+  const [showModal, setShowModal] = useState(false);
+  const { address } = useAccount();
+
+  useEffect(() => {
+    if (address) {
+      setShowModal(true);
+    }
+  }, [address]);
+
+  const handleVerify = () => {
+    window.open(
+      `https://www-stage.ankr.com/verify/consumer/connect/?policyId=377&chain=opbnb&accountAddress=${address}`,
+      "_blank"
+    );
+    setShowModal(false);
+  };
   return (
     <div className="bg-white">
       <div className="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20 pt-14">
@@ -30,6 +51,7 @@ export default function Hero() {
                   Get started
                 </a>
               </div>
+              {showModal && <AnkrModal handleVerify={handleVerify} />}
             </div>
             <img
               src="/cric.svg"
