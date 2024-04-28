@@ -26,13 +26,15 @@ task("update-request", "Updates the Oracle function in the contract").setAction(
       "https://02.functions-gateway.testnet.chain.link/",
     ];
     const explorerUrl = "https://sepolia.arbiscan.io";
-    const gameWeek = 1;
     // Initialize functions settings
     const source = fs
       .readFileSync(path.resolve(__dirname, "oracle-script.js"))
       .toString();
 
-    const args = [gameWeek.toString()]; // args - arguments can be encoded off-chain to bytes.
+    const args = [
+      "91515",
+      "https://amethyst-impossible-ptarmigan-368.mypinata.cloud/ipfs/Qmb1ZQWyzZCHSpH4rVn5XCYtbRCemxn3Ed6K659XvmN4B3?pinataGatewayToken=CUMCxB7dqGB8wEEQqGSGd9u1edmJpWmR9b0Oiuewyt5gs633nKmTogRoKZMrG4Vk",
+    ];
     const secrets = {
       pinataKey: process.env.PINATA_API_KEY || "",
       cricBuzzKey: process.env.CRICKET_API_KEY || "",
