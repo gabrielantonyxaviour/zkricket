@@ -5,15 +5,21 @@ import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { DynamicWidget } from "../lib/dynamic";
+import { useAccount } from "wagmi";
+
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Fixtures", href: "/fixtures" },
   { name: "Leaderboard", href: "#" },
 ];
 
+import { DynamicUserProfile, useDynamicContext } from "../lib/dynamic";
+
 function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const { setShowDynamicUserProfile } = useDynamicContext();
+  const { address } = useAccount();
+  console.log(address);
   return (
     <div>
       <header className="absolute inset-x-0 top-0 z-50">
@@ -53,6 +59,7 @@ function Nav() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+            {/* <DynamicWidget /> */}
             <DynamicWidget />
           </div>
         </nav>
