@@ -15,6 +15,8 @@ import {
   DynamicContextProvider,
   EthereumWalletConnectors,
 } from "../lib/dynamic";
+import { Providers } from "./providers";
+import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
 
 export default function RootLayout({
   children,
@@ -29,11 +31,15 @@ export default function RootLayout({
           walletConnectors: [EthereumWalletConnectors],
         }}
       >
-        <body>
-          <Nav />
-          <div className={jksans.className}>{children}</div>
-          <Footer />
-        </body>
+        <Providers>
+          <DynamicWagmiConnector>
+            <body>
+              <Nav />
+              <div className={jksans.className}>{children}</div>
+              <Footer />
+            </body>
+          </DynamicWagmiConnector>
+        </Providers>
       </DynamicContextProvider>
     </html>
   );
