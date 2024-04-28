@@ -9,8 +9,7 @@ import {
   useState,
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { teams } from "@/data/teams";
-
+import { csk, rcb, rr, kkr, dc, pbks, lsg, gt, srh } from "@/data/teams";
 export default function Addplayer(props: {
   index: number;
   teams: string[];
@@ -18,7 +17,8 @@ export default function Addplayer(props: {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const index = props.index;
-  const team = props.teams;
+  const team = ["lsg", "csk"];
+
   const open = props.open;
   const setOpen = props.setOpen;
   interface Player {
@@ -29,30 +29,105 @@ export default function Addplayer(props: {
     imageId?: number;
     battingStyle?: string;
     bowlingStyle?: string;
+    team?: string;
   }
   const [role, setRole] = useState("");
   const [player, setPlayer] = useState<Player[]>([]); // Fix the missing 'Player' type
+  const allTeams = {
+    csk: csk,
+    rcb: rcb,
+    rr: rr,
+    kkr: kkr,
+    dc: dc,
+    pbks: pbks,
+    lsg: lsg,
+    gt: gt,
+    srh: srh,
+  };
   useEffect(() => {
     if (index === 10) {
-      setPlayer(
-        teams.csk.player.filter((player) => player.role === "WK-Batter")
-      );
+      const team1 = allTeams[team[0] as keyof typeof allTeams];
+      const team2 = allTeams[team[1] as keyof typeof allTeams];
+      setPlayer([
+        ...team1.player
+          .filter((player) => player.role === "WK-Batter")
+          .map(
+            (player) => ({ ...player, team: team[0] }) // Set team for players from team1
+          ),
+        ...team2.player
+          .filter((player) => player.role === "WK-Batter")
+          .map(
+            (player) => ({ ...player, team: team[1] }) // Set team for players from team2
+          ),
+      ]);
       setRole("Wicket Keeper");
     } else if (index >= 6) {
-      setPlayer(
-        teams.csk.player.filter(
-          (player) => player.role === "Batting Allrounder"
-        )
-      );
+      const team1 = allTeams[team[0] as keyof typeof allTeams];
+      const team2 = allTeams[team[1] as keyof typeof allTeams];
+      setPlayer([
+        ...team1.player
+          .filter((player) => player.role === "Batting Allrounder")
+          .map(
+            (player) => ({ ...player, team: team[0] }) // Set team for players from team1
+          ),
+        ...team2.player
+          .filter((player) => player.role === "Batting Allrounder")
+          .map(
+            (player) => ({ ...player, team: team[1] }) // Set team for players from team2
+          ),
+      ]);
       setRole("All Rounder");
     } else if (index >= 3) {
-      setPlayer(teams.csk.player.filter((player) => player.role === "Bowler"));
+      const team1 = allTeams[team[0] as keyof typeof allTeams];
+      const team2 = allTeams[team[1] as keyof typeof allTeams];
+      setPlayer([
+        ...team1.player
+          .filter((player) => player.role === "Bowler")
+          .map(
+            (player) => ({ ...player, team: team[0] }) // Set team for players from team1
+          ),
+        ...team2.player
+          .filter((player) => player.role === "Bowler")
+          .map(
+            (player) => ({ ...player, team: team[1] }) // Set team for players from team2
+          ),
+      ]);
       setRole("Bowler");
     } else {
-      setPlayer(teams.csk.player.filter((player) => player.role === "Batter"));
+      const team1 = allTeams[team[0] as keyof typeof allTeams];
+      const team2 = allTeams[team[1] as keyof typeof allTeams];
+      setPlayer([
+        ...team1.player
+          .filter((player) => player.role === "Batter")
+          .map(
+            (player) => ({ ...player, team: team[0] }) // Set team for players from team1
+          ),
+        ...team2.player
+          .filter((player) => player.role === "Batter")
+          .map(
+            (player) => ({ ...player, team: team[1] }) // Set team for players from team2
+          ),
+      ]);
       setRole("Batsman");
     }
   }, [index]);
+  const [playerImages, setPlayerImages] = useState<(string | null)[]>([]);
+  useEffect(() => {
+    const fetchImages = async () => {
+      const imageUrls = await Promise.all(
+        player.map(async (person) => {
+          if (person.imageId) {
+            return await getImage(person.imageId);
+          } else {
+            return null;
+          }
+        })
+      );
+      setPlayerImages(imageUrls);
+    };
+
+    fetchImages();
+  }, [player]);
   const getImage = async (id: number): Promise<string> => {
     const url = `https://cricbuzz-cricket.p.rapidapi.com/stats/v1/player/${id}`;
     const headers: HeadersInit = {
@@ -158,11 +233,13 @@ export default function Addplayer(props: {
                                 <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                   <div className="flex items-center">
                                     <div className="h-11 w-11 flex-shrink-0">
-                                      {/* <img
+                                      <img
                                         className="h-11 w-11 rounded-full"
-                                        src={getImage(person.imageId) }
+                                        src={
+                                          playerImages[index] || "/default.png"
+                                        }
                                         alt=""
-                                      /> */}
+                                      />
                                     </div>
                                     <div className="ml-4">
                                       <div className="font-medium text-gray-900">
@@ -174,7 +251,7 @@ export default function Addplayer(props: {
                                 <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                   <div className="text-gray-900">
                                     {/* {person.team} */}
-                                    rcb
+                                    {person.team?.toUpperCase()}
                                   </div>
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
