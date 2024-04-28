@@ -2,6 +2,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 
 interface Player {
+  name: string;
   team:
     | "plain"
     | "csk"
@@ -16,7 +17,7 @@ interface Player {
     | "lsg"
     | "pkbs"
     | "dc";
-  type: "batsman" | "bowler" | "allrounder" | "wicketkeeper";
+  type: "bat" | "bowl" | "ar" | "wk";
   image: string;
 }
 
@@ -29,19 +30,80 @@ interface PitchProps {
 
 const Pitch: React.FC<PitchProps> = ({ open, setOpen, setindex, index }) => {
   const [playerPositions, setPlayerPositions] = useState<Player[]>([
-    { type: "batsman", image: "/players/plain/PlainBat.png", team: "plain" },
-    { type: "batsman", image: "/players/plain/PlainBat.png", team: "plain" },
-    { type: "batsman", image: "/players/plain/PlainBat.png", team: "plain" },
-    { type: "bowler", image: "/players/plain/PlainBowl.png", team: "plain" },
-    { type: "bowler", image: "/players/plain/PlainBowl.png", team: "plain" },
-    { type: "bowler", image: "/players/plain/PlainBowl.png", team: "plain" },
-    { type: "allrounder", image: "/players/plain/PlainAll.png", team: "plain" },
-    { type: "allrounder", image: "/players/plain/PlainAll.png", team: "plain" },
-    { type: "allrounder", image: "/players/plain/PlainAll.png", team: "plain" },
-    { type: "allrounder", image: "/players/plain/PlainAll.png", team: "plain" },
     {
-      type: "wicketkeeper",
-      image: "/players/plain/PlainWk.png",
+      name: "Choose Player",
+      type: "bat",
+      image: `/players/plain/bat.png`,
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "bat",
+      image: "/players/plain/bat.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "bat",
+      image: "/players/plain/bat.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "bowl",
+      image: "/players/plain/bowl.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "bowl",
+      image: "/players/plain/bowl.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "bowl",
+      image: "/players/plain/bowl.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "ar",
+      image: "/players/plain/ar.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "ar",
+      image: "/players/plain/ar.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "ar",
+      image: "/players/plain/ar.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "ar",
+      image: "/players/plain/ar.png",
+      team: "plain",
+    },
+    {
+      name: "Choose Player",
+
+      type: "wk",
+      image: "/players/plain/wk.png",
       team: "plain",
     },
   ]);
@@ -62,12 +124,16 @@ const Pitch: React.FC<PitchProps> = ({ open, setOpen, setindex, index }) => {
             alt="Pitch"
           />
           {playerPositions.map((player, index) => (
-            <PlayerImage
-              key={index}
-              index={index}
-              player={player}
-              onClick={() => handlePlayerClick(index)}
-            />
+            <>
+              <PlayerImage
+                name={player.name}
+                key={index}
+                index={index}
+                player={player}
+                onClick={() => handlePlayerClick(index)}
+              />
+              <div></div>
+            </>
           ))}
         </div>
       </div>
@@ -76,27 +142,41 @@ const Pitch: React.FC<PitchProps> = ({ open, setOpen, setindex, index }) => {
 };
 
 interface PlayerImageProps {
+  name: string;
   index: number;
   player: Player;
   onClick: () => void;
 }
 
 const PlayerImage: React.FC<PlayerImageProps> = ({
+  name,
   index,
   player,
   onClick,
 }) => {
   return (
-    <img
-      src={player.image}
-      alt={`Player ${index + 1}`}
-      className="absolute cursor-pointer w-20"
-      onClick={onClick}
-      style={{
-        top: calculateTopPosition(index),
-        left: calculateLeftPosition(index),
-      }}
-    />
+    <>
+      <img
+        src={`/players/${player.team}/${player.type}.png`}
+        alt={`Player ${index + 1}`}
+        className="absolute cursor-pointer w-20"
+        onClick={onClick}
+        style={{
+          top: calculateTopPosition(index),
+          left: calculateLeftPosition(index),
+        }}
+      />
+      <div
+        className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black  rounded-md"
+        onClick={onClick}
+        style={{
+          top: calculateTopTextPosition(index),
+          left: calculateLeftPosition(index),
+        }}
+      >
+        {name}
+      </div>
+    </>
   );
 };
 
@@ -104,7 +184,6 @@ const calculateTopPosition = (index: number): string => {
   const centerY = window.innerHeight / 2;
   const playerHeight = 20;
   const totalPlayers = 11;
-  const offset = (index - totalPlayers / 2) * playerHeight;
   if (index === 10) {
     return `${centerY - 450}px`;
   } else if (index >= 6) {
@@ -116,6 +195,18 @@ const calculateTopPosition = (index: number): string => {
   }
 };
 
+const calculateTopTextPosition = (index: number): string => {
+  const centerY = window.innerHeight / 2;
+  if (index === 10) {
+    return `${centerY - 450 + 110}px`;
+  } else if (index >= 6) {
+    return `${centerY - 30 + 110}px`;
+  } else if (index >= 3) {
+    return `${centerY + 190 + 110}px`;
+  } else {
+    return `${centerY - 250 + 110}px`;
+  }
+};
 const calculateLeftPosition = (index: number): string => {
   const centerX = window.innerWidth / 2;
   if (index === 10) {
