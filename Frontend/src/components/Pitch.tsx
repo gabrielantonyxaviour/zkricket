@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 interface Player {
   team:
@@ -20,7 +20,14 @@ interface Player {
   image: string;
 }
 
-const Pitch: React.FC = () => {
+interface PitchProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  index: number;
+  setindex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Pitch: React.FC<PitchProps> = ({ open, setOpen, setindex, index }) => {
   const [playerPositions, setPlayerPositions] = useState<Player[]>([
     { type: "batsman", image: "/players/plain/PlainBat.png", team: "plain" },
     { type: "batsman", image: "/players/plain/PlainBat.png", team: "plain" },
@@ -41,6 +48,8 @@ const Pitch: React.FC = () => {
 
   const handlePlayerClick = (index: number) => {
     console.log("Player", index, "clicked");
+    setindex(index);
+    setOpen(true);
   };
 
   return (
