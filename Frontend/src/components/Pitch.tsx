@@ -18,7 +18,6 @@ interface Player {
     | "pkbs"
     | "dc";
   type: "bat" | "bowl" | "ar" | "wk";
-  image: string;
 }
 
 interface PitchProps {
@@ -33,77 +32,56 @@ const Pitch: React.FC<PitchProps> = ({ open, setOpen, setindex, index }) => {
     {
       name: "Choose Player",
       type: "bat",
-      image: `/players/plain/bat.png`,
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "bat",
-      image: "/players/plain/bat.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "bat",
-      image: "/players/plain/bat.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "bowl",
-      image: "/players/plain/bowl.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "bowl",
-      image: "/players/plain/bowl.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "bowl",
-      image: "/players/plain/bowl.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "ar",
-      image: "/players/plain/ar.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "ar",
-      image: "/players/plain/ar.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "ar",
-      image: "/players/plain/ar.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "ar",
-      image: "/players/plain/ar.png",
       team: "plain",
     },
     {
       name: "Choose Player",
-
       type: "wk",
-      image: "/players/plain/wk.png",
       team: "plain",
     },
   ]);
@@ -182,8 +160,6 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
 
 const calculateTopPosition = (index: number): string => {
   const centerY = window.innerHeight / 2;
-  const playerHeight = 20;
-  const totalPlayers = 11;
   if (index === 10) {
     return `${centerY - 450}px`;
   } else if (index >= 6) {
