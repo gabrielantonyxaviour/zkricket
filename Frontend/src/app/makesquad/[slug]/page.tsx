@@ -2,6 +2,7 @@
 import Addplayer from "@/components/Addplayer";
 import Logs from "@/components/Logs";
 import Pitch from "@/components/Pitch";
+import fetchMatchDetail from "@/utils/supabaseFunctions/fetchMatchDetails";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -10,6 +11,19 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [index, setindex] = useState(0);
   const [teams, setteams] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
+
+  const teamShortForms: { [key: string]: string } = {
+    "Chennai Super Kings": "CSK",
+    "Royal Challengers Bangalore": "RCB",
+    "Mumbai Indians": "MI",
+    "Delhi Capitals": "DC",
+    "Kolkata Knight Riders": "KKR",
+    "Punjab Kings": "PBKS",
+    "Rajasthan Royals": "RR",
+    "Sunrisers Hyderabad": "SRH",
+    "Gujarat Titans": "GT",
+    "Lucknow Super Giants": "LSG",
+  };
   interface Player {
     name: string;
     team:
@@ -87,7 +101,16 @@ export default function Page({ params }: { params: { slug: string } }) {
   ]);
 
   useEffect(() => {
-    setteams(["CSK", "RCB"]);
+    const fetchTeams = async () => {
+      const { message, response } = await fetchMatchDetail(params.slug);
+      if (message === "Success") {
+        setteams([
+          teamShortForms[response[0].team1],
+          teamShortForms[response[0].team2],
+        ]);
+      }
+    };
+    fetchTeams();
   }, []);
   return (
     <>
@@ -97,8 +120,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         open={open}
         setOpen={setOpen}
         setPlayerPositions={setPlayerPositions}
+        slug={params.slug}
       />
-      {/* <Logs /> */}
       <div className="pt-10 bg-white">
         <div className="flex flex-row">
           <Link href={"/fixtures"}>
@@ -109,7 +132,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <div className=" pr-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold">
             {teams[0]} VS {teams[1]}
             <div className=" px-2 text-2xl font-thin">
-              Fxiture: {params.slug}
+              Fixture: {params.slug}
             </div>
           </div>
         </div>
@@ -131,14 +154,13 @@ export default function Page({ params }: { params: { slug: string } }) {
               Submit Squad
             </a>
           </div>
-          <div className="mt-10 flex items-center gap-x-6">
-            <a
-              href="#"
-              className="rounded-md shad bg-[#abb526] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#bdc646] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              View Logs
-            </a>
+        </div>
+
+        <div className="px-24">
+          <div className=" pr-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold">
+            Logs
           </div>
+          <Logs />
         </div>
       </div>
     </>

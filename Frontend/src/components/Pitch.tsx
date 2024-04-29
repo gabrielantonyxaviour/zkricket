@@ -131,11 +131,12 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
   );
 
   useEffect(() => {
-    console.log(player.type, player.team);
     setImageUrl(`/players/${player.team}/${player.type}.png`);
-    console.log(`/players/${player.team}/${player.type}.png`);
   }, [player.team, player.type]);
 
+  const [points, setPoints] = useState<number[]>([
+    0, 20, 30, 0, 0, 0, 101, 0, 0, 0, 0,
+  ]);
   return (
     <>
       <img
@@ -152,11 +153,22 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
         className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black rounded-md"
         onClick={onClick}
         style={{
-          top: calculateTopTextPosition(index),
+          top: `${calculateTopTextPosition(index)}px`,
           left: calculateLeftPosition(index),
         }}
       >
         {name}
+      </div>
+      <div
+        className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black rounded-md"
+        onClick={onClick}
+        style={{
+          top: `${calculateTopTextPosition(index) + 25}px`,
+          left: `${calculateLeftTextPosition(index) + 20}px`,
+        }}
+      >
+        {points[index]}
+        {"  "}Points
       </div>
     </>
   );
@@ -175,16 +187,16 @@ const calculateTopPosition = (index: number): string => {
   }
 };
 
-const calculateTopTextPosition = (index: number): string => {
+const calculateTopTextPosition = (index: number): number => {
   const centerY = window.innerHeight / 2;
   if (index === 10) {
-    return `${centerY - 450 + 110}px`;
+    return centerY - 450 + 110;
   } else if (index >= 6) {
-    return `${centerY - 30 + 110}px`;
+    return centerY - 30 + 110;
   } else if (index >= 3) {
-    return `${centerY + 190 + 110}px`;
+    return centerY + 190 + 110;
   } else {
-    return `${centerY - 250 + 110}px`;
+    return centerY - 250 + 110;
   }
 };
 const calculateLeftPosition = (index: number): string => {
@@ -197,6 +209,18 @@ const calculateLeftPosition = (index: number): string => {
     return `${centerX - 200 + (index % 3) * 160}px`;
   } else {
     return `${centerX - 200 + (index + (1 % 1)) * 160}px`;
+  }
+};
+const calculateLeftTextPosition = (index: number): number => {
+  const centerX = window.innerWidth / 2;
+  if (index === 10) {
+    return centerX - 35;
+  } else if (index >= 6) {
+    return centerX - 290 + (index % 6) * 160;
+  } else if (index >= 3) {
+    return centerX - 200 + (index % 3) * 160;
+  } else {
+    return centerX - 200 + (index + (1 % 1)) * 160;
   }
 };
 
