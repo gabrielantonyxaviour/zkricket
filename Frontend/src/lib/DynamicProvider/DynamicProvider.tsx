@@ -25,6 +25,21 @@ export const DynamicProvider: React.FC<PropsWithChildren> = ({ children }) => {
       ],
       vanityName: "Scroll sepolia",
     },
+    {
+      blockExplorerUrls: ["https://sepolia.etherscan.io"],
+      chainId: 11155111,
+      chainName: "Ethereum Sepolia",
+      iconUrls: ["https://app.dynamic.xyz/assets/networks/eth.svg"],
+      name: "Ethereum",
+      nativeCurrency: {
+        decimals: 18,
+        name: "Ether",
+        symbol: "ETH",
+      },
+      networkId: 11155111,
+      rpcUrls: [process.env.NEXT_PUBLIC_SEPOLIA_URL || ""],
+      vanityName: "ETH Sepolia",
+    },
   ];
   return (
     <DynamicContextProvider

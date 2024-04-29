@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Pixelify_Sans } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 const jksans = Plus_Jakarta_Sans({ subsets: ["latin"] });
-
+const pxsans = Pixelify_Sans({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Zkricket",
   description: "A zero-knowledge fantasy cricket platform",

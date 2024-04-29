@@ -10,17 +10,39 @@ import {
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { csk, rcb, rr, kkr, dc, pbks, lsg, gt, srh } from "@/data/teams";
-export default function Addplayer(props: {
+interface PlayerPitch {
+  name: string;
+  team:
+    | "plain"
+    | "csk"
+    | "rcb"
+    | "mi"
+    | "dc"
+    | "kkr"
+    | "pbks"
+    | "rr"
+    | "srh"
+    | "gt"
+    | "lsg"
+    | "pkbs"
+    | "dc";
+  type: "bat" | "bowl" | "ar" | "wk";
+}
+interface AddPlayerProps {
   index: number;
   teams: string[];
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-}) {
-  const index = props.index;
+  setPlayerPositions: Dispatch<SetStateAction<PlayerPitch[]>>;
+}
+const Addplayer: React.FC<AddPlayerProps> = ({
+  open,
+  teams,
+  index,
+  setPlayerPositions,
+  setOpen,
+}) => {
   const team = ["lsg", "csk"];
-
-  const open = props.open;
-  const setOpen = props.setOpen;
   interface Player {
     id?: string;
     name: string;
@@ -111,6 +133,21 @@ export default function Addplayer(props: {
       setRole("Batsman");
     }
   }, [index]);
+  const updatePlayerPosition = (index: number, newPlayerData: PlayerPitch) => {
+    setPlayerPositions((prevPositions: any) => {
+      // Create a copy of the state to avoid mutation
+      const updatedPositions = [...prevPositions];
+
+      // Ensure the index is within valid bounds
+      if (index >= 0 && index < updatedPositions.length) {
+        updatedPositions[index] = newPlayerData; // Replace the entire player entry
+      } else {
+        console.error(`Invalid index: ${index}`);
+      }
+
+      return updatedPositions;
+    });
+  };
   const [playerImages, setPlayerImages] = useState<(string | null)[]>([]);
   useEffect(() => {
     const fetchImages = async () => {
@@ -151,6 +188,16 @@ export default function Addplayer(props: {
       console.error(error); // Log the error
       return ""; // Return null in case of error
     }
+  };
+
+  const renderImage = (index: number) => {
+    return (
+      <img
+        className="h-11 w-11 rounded-full"
+        src={playerImages[index] || "/default.png"}
+        alt=""
+      />
+    );
   };
 
   return (
@@ -233,13 +280,14 @@ export default function Addplayer(props: {
                                 <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                   <div className="flex items-center">
                                     <div className="h-11 w-11 flex-shrink-0">
-                                      <img
+                                      {/* <img
                                         className="h-11 w-11 rounded-full"
                                         src={
                                           playerImages[index] || "/default.png"
                                         }
                                         alt=""
-                                      />
+                                      /> */}
+                                      {renderImage(index)}
                                     </div>
                                     <div className="ml-4">
                                       <div className="font-medium text-gray-900">
@@ -262,6 +310,14 @@ export default function Addplayer(props: {
                                     <button
                                       type="button"
                                       className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                      onClick={() => {
+                                        console.log(person);
+                                        updatePlayerPosition(index, {
+                                          name: person.name,
+                                          team: person.team as any,
+                                          type: person.role as any,
+                                        });
+                                      }}
                                     >
                                       Add Player
                                     </button>
@@ -282,4 +338,5 @@ export default function Addplayer(props: {
       </Dialog>
     </Transition.Root>
   );
-}
+};
+export default Addplayer;
