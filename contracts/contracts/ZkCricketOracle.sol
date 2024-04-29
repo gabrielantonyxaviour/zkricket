@@ -25,7 +25,6 @@ contract ZkCricketOracle is FunctionsClient, ConfirmedOwner {
 
     // Hyperlane Variables
     IMailbox public mailbox;
-    address public destinationAddress;
     bytes32 public protocolAddress;
     uint32 public destinationDomain;
 
@@ -41,12 +40,11 @@ contract ZkCricketOracle is FunctionsClient, ConfirmedOwner {
     uint64 public s_subscriptionId;
     mapping(bytes32=>uint256) public requestToGameId;
 
-    constructor(address _functionsRouter, address _destinationAddress, uint32 _destinationDomain, bytes32 _protocolAddress, IMailbox _mailbox, string memory _sourceCode, uint64 _subscriptionId, bytes32 _donId) 
+    constructor(address _functionsRouter, uint32 _destinationDomain, bytes32 _protocolAddress, IMailbox _mailbox, string memory _sourceCode, uint64 _subscriptionId, bytes32 _donId) 
     FunctionsClient(_functionsRouter) ConfirmedOwner(msg.sender) 
     {
         // Hyperlane Initializations
         mailbox = _mailbox;
-        destinationAddress=_destinationAddress;
         protocolAddress=_protocolAddress;
         destinationDomain=_destinationDomain;
 

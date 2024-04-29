@@ -1,6 +1,6 @@
 const { networks } = require("../../networks");
-
-task("deploy-rewards", "Deploys the ZkCricketRewards contract")
+const fs = require("fs");
+task("deploy-oracle", "Deploys the ZkCricketOracle contract")
   .addOptionalParam(
     "verify",
     "Set to true to verify contract",
@@ -8,20 +8,23 @@ task("deploy-rewards", "Deploys the ZkCricketRewards contract")
     types.boolean
   )
   .setAction(async (taskArgs) => {
-    console.log(`Deploying ZkCricketRewards contract to ${network.name}`);
+    console.log(`Deploying ZkCricketOracle contract to ${network.name}`);
 
     console.log("\n__Compiling Contracts__");
     await run("compile");
 
     const args = [
-      "0x71Ef7f9Ac3a17852de46d8e34A686B055946E9D5",
-      "CHZ",
-      "0x0000000000000000000000000000000000000000",
-      "0x00000000000000000000000088854958eCE14EF7AC63AC684AAF19f7D9e84233",
+      "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0",
+      "534351",
+      "0x" + "C044FCe37927A0Cb55C7e57425Fe3772181228a6".padStart(64, "0"),
+      "0xfFAEF09B3cd11D9b20d1a19bECca54EEC2884766",
+      fs.readFileSync("./oracle-script.js", "utf8"),
+      "2435",
+      "0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000",
     ];
 
     const protocolContractFactory = await ethers.getContractFactory(
-      "ZkCricketRewards"
+      "ZkCricketOracle"
     );
     const protocolContract = await protocolContractFactory.deploy(...args);
 
@@ -38,7 +41,7 @@ task("deploy-rewards", "Deploys the ZkCricketRewards contract")
     );
 
     console.log(
-      "\nDeployed ZkCricketRewards contract to:",
+      "\nDeployed ZkCricketOracle contract to:",
       protocolContract.address
     );
 
@@ -77,6 +80,6 @@ task("deploy-rewards", "Deploys the ZkCricketRewards contract")
     }
 
     console.log(
-      `\n ZkCricketRewards contract deployed to ${protocolContract.address} on ${network.name}`
+      `\n ZkCricketOracle contract deployed to ${protocolContract.address} on ${network.name}`
     );
   });
