@@ -102,11 +102,11 @@ export default function Page({ params }: { params: { slug: string } }) {
       <div className="pt-10 bg-white">
         <div className="flex flex-row">
           <Link href={"/fixtures"}>
-            <div className="bg-white pl-16 py-6 sm:pt-32 lg:pl-16 text-black text-6xl font-bold mt-5">
+            <div className=" pl-16 py-6 sm:pt-32 lg:pl-16 text-black text-6xl font-bold mt-5">
               <ArrowLeftCircleIcon className="h-10 w-10 text-black" />
             </div>
           </Link>
-          <div className="bg-white pr-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold">
+          <div className=" pr-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold">
             {teams[0]} VS {teams[1]}
             <div className=" px-2 text-2xl font-thin">
               Fxiture: {params.slug}
