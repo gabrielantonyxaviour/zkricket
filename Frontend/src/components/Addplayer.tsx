@@ -42,7 +42,7 @@ const Addplayer: React.FC<AddPlayerProps> = ({
   setPlayerPositions,
   setOpen,
 }) => {
-  const team = ["lsg", "csk"];
+  const team = ["rcb", "csk"];
   interface Player {
     id?: string;
     name: string;
