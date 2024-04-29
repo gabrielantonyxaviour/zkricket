@@ -6,66 +6,81 @@ const people = [
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0x83sd8f3",
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
+
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
+
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
+
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
+
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
+
+    commitmenthash: "afafasfasfas",
+  },
+
+  {
+    name: "Lindsay Walton",
+    points: "5",
+    address: "0xafasf",
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
+    address: "0xafasf",
+
     commitmenthash: "afafasfasfas",
   },
   {
     name: "Lindsay Walton",
     points: "5",
-    commitmenthash: "afafasfasfas",
-  },
-  {
-    name: "Lindsay Walton",
-    points: "5",
-    commitmenthash: "afafasfasfas",
-  },
-  {
-    name: "Lindsay Walton",
-    points: "5",
+    address: "0xafasf",
+
     commitmenthash: "afafasfasfas",
   },
 ];
@@ -148,7 +163,7 @@ export default function Leaderboard() {
                       {index + 1}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {person.name}
+                      <span title={person.address}>{person.name}</span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {person.points}
