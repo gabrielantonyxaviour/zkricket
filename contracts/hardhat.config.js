@@ -47,7 +47,7 @@ module.exports = {
       sepolia: networks.ethereumSepolia.verifyApiKey,
       baseSepolia: networks.baseSepolia.verifyApiKey,
       arbitrumSepolia: networks.arbitrumSepolia.verifyApiKey,
-      chilizSpicy: networks.chilizSpicy.verifyApiKey,
+      scrollSepolia: networks.scrollSepolia.verifyApiKey,
     },
     customChains: [
       {
@@ -68,7 +68,7 @@ module.exports = {
       },
       {
         network: "scrollSepolia",
-        chainId: networks.chilizSpicy.chainId,
+        chainId: networks.scrollSepolia.chainId,
         urls: {
           apiURL: `https://api-sepolia.scrollscan.com/api`,
           browserURL: "https://scrollscan.com/",

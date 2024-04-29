@@ -53,7 +53,9 @@ const networks = {
     protocol: "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
   },
   scrollSepolia: {
-    url: "https://scroll-sepolia.drpc.org",
+    url:
+      `https://rpc.ankr.com/scroll_sepolia_testnet/${process.env.ANKR_RPC_KEY}` ||
+      "UNSET",
     gasPrice: undefined,
     nonce: undefined,
     accounts,
@@ -63,7 +65,8 @@ const networks = {
     nativeCurrencySymbol: "ETH",
   },
   ethereumSepolia: {
-    url: process.env.SEPOLIA_RPC_URL || "UNSET",
+    url:
+      `https://rpc.ankr.com/eth_sepolia/${process.env.ANKR_RPC_KEY}` || "UNSET",
     gasPrice: undefined,
     nonce: undefined,
     accounts,
