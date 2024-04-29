@@ -1,6 +1,33 @@
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Pixelify_Sans } from "next/font/google";
+const pxsans = Pixelify_Sans({ subsets: ["latin"] });
 
 const people = [
+  {
+    name: "Lindsay Walton",
+    points: "5",
+    commitmenthash: "afafasfasfas",
+  },
+  {
+    name: "Lindsay Walton",
+    points: "5",
+    commitmenthash: "afafasfasfas",
+  },
+  {
+    name: "Lindsay Walton",
+    points: "5",
+    commitmenthash: "afafasfasfas",
+  },
+  {
+    name: "Lindsay Walton",
+    points: "5",
+    commitmenthash: "afafasfasfas",
+  },
+  {
+    name: "Lindsay Walton",
+    points: "5",
+    commitmenthash: "afafasfasfas",
+  },
   {
     name: "Lindsay Walton",
     points: "5",
@@ -45,17 +72,17 @@ const people = [
 
 export default function Leaderboard() {
   return (
-    <div className="px-4 sm:px-6 lg:px-8 border-2 rounded-lg shadow-md">
+    <div className="px-4 sm:px-6 lg:px-8 border-2 rounded-lg shadow-md heropattern-pixeldots-slate-50">
       <div className="sm:flex sm:items-center"></div>
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <table className="min-w-full divide-y divide-gray-300">
-              <thead>
+              <thead className={`${pxsans.className}`}>
                 <tr>
                   <th
                     scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                    className="py-3.5 pl-4 pr-3 text-left text-xl font-semibold text-gray-900 sm:pl-0"
                   >
                     <a href="#" className="group inline-flex">
                       Ranking
@@ -69,7 +96,7 @@ export default function Leaderboard() {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    className="px-3 py-3.5 text-left  text-xl font-semibold text-gray-900"
                   >
                     <a href="#" className="group inline-flex">
                       Name
@@ -83,7 +110,7 @@ export default function Leaderboard() {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    className="px-3 py-3.5 text-left  text-xl font-semibold text-gray-900"
                   >
                     <a href="#" className="group inline-flex">
                       Points
@@ -97,7 +124,7 @@ export default function Leaderboard() {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    className="px-3 py-3.5 text-left  text-xl font-semibold text-gray-900"
                   >
                     <a href="#" className="group inline-flex">
                       Commitment Hash
@@ -114,7 +141,7 @@ export default function Leaderboard() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-gray-200 heropattern-floortile-slate-100">
                 {people.map((person, index) => (
                   <tr key={index}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
