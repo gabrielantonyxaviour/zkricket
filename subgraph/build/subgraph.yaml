@@ -8,9 +8,9 @@ dataSources:
     name: ZkCricket
     network: scroll-sepolia
     source:
-      address: "0x09f1af4e16728fcf340051055159f0f9d5e00b54"
+      address: "0x8DecD86959b87c64Be4978029a27D19c3e5d49DE"
       abi: ZkCricket
-      startBlock: 4152537
+      startBlock: 4159257
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

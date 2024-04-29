@@ -112,13 +112,13 @@ contract ZkCricket {
             try zkVerifier.verify(_proof, _publicInputs)
             {
                gamePoints[gameId][msg.sender] = totalPoints;
-                emit PointsClaimed(gameCounter-1, msg.sender, totalPoints);
+                emit PointsClaimed(gameCounter, msg.sender, totalPoints);
             }catch{
                 revert ZeroKnowledgeVerificationFailed();
             }
         } else{
             gamePoints[gameId][msg.sender] = totalPoints;
-            emit PointsClaimed(gameCounter-1, msg.sender, totalPoints);
+            emit PointsClaimed(gameCounter, msg.sender, totalPoints);
         }
     }
 
