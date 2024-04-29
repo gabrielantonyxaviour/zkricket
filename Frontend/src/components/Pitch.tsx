@@ -131,7 +131,6 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
   );
 
   useEffect(() => {
-    console.log(player.type, player.team);
     setImageUrl(`/players/${player.team}/${player.type}.png`);
     console.log(`/players/${player.team}/${player.type}.png`);
   }, [player.team, player.type]);
