@@ -43,8 +43,23 @@ function page() {
           </p>
         </div>
       </div>
-      <div className="px-52 bg-white">
+      <div className="px-12 bg-white">
         <FixtureCard fixtures={Upcoming} completed={false} />
+      </div>
+      <div className="bg-white px-6 py-6 sm:pt-32 lg:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2
+            className={`text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl ${pxsans.className}`}
+          >
+            Ongoing Fixtures
+          </h2>
+          <p className="mt-6 text-lg leading-8 text-gray-600">
+            View Ongoing fixtures
+          </p>
+        </div>
+      </div>
+      <div className="px-12 bg-white">
+        <FixtureCard fixtures={Upcoming} completed={true} />
       </div>
       <div className="bg-white px-6 py-6 sm:pt-32 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
@@ -58,7 +73,7 @@ function page() {
           </p>
         </div>
       </div>
-      <div className="px-52 bg-white">
+      <div className="px-12 bg-white">
         <FixtureCard fixtures={Upcoming} completed={true} />
       </div>
     </div>
