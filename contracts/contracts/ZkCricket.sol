@@ -6,7 +6,7 @@ import {FunctionsClient} from "@chainlink/contracts/src/v0.8/functions/dev/v1_0_
 import {ConfirmedOwner} from "@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner.sol";
 import {FunctionsRequest} from "@chainlink/contracts/src/v0.8/functions/dev/v1_0_0/libraries/FunctionsRequest.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-// import {UltraVerifier} from "./noir/plonk_vk.sol";
+import {UltraVerifier} from "./zk/plonk_vk.sol";
 
 error NotOwner(address caller);
 error NotMailbox(address caller);
@@ -44,7 +44,7 @@ contract ZkCricket is FunctionsClient, ConfirmedOwner {
     mapping(bool=>uint32) public destinationChainIds;
 
     // zk Variables
-    // UltraVerifier public zkVerifier; 
+    UltraVerifier public zkVerifier; 
     bool public isZkVerificationEnabled;
 
     // Chainlink Variables
@@ -60,7 +60,7 @@ contract ZkCricket is FunctionsClient, ConfirmedOwner {
     uint64 public s_subscriptionId;
     mapping(bytes32=>uint256) public requestToGameweek;
 
-    constructor(address _functionsRouter, IMailbox _mailbox, string[] memory _playersMetadata) 
+    constructor(address _functionsRouter, IMailbox _mailbox, string[] memory _playersMetadata, string memory _sourceCode) 
     FunctionsClient(_functionsRouter) ConfirmedOwner(msg.sender) 
     {
         // Hyperlane Initializations
@@ -74,10 +74,11 @@ contract ZkCricket is FunctionsClient, ConfirmedOwner {
         emit PlayersMetadataUpdated(playersMetadata.length, _playersMetadata);
 
         // zk Initializations
-        // zkVerifier=new UltraVerifier();
+        zkVerifier=new UltraVerifier();
 
         // Chainlink Initializations
         functionsRouter=_functionsRouter;
+        sourceCode=_sourceCode;
     }
 
     event PlayersMetadataUpdated(uint256 playersMetadataLength, string[] playersMetadata);
@@ -120,13 +121,13 @@ contract ZkCricket is FunctionsClient, ConfirmedOwner {
             _publicInputs[0]=pointsMerkleRoot[gameweekCounter];
             _publicInputs[1]=gameWeekToSquadHash[gameweekCounter][msg.sender];
             _publicInputs[2]= bytes32(totalPoints);
-            // try zkVerifier.verify(_proof, _publicInputs)
-            // {
-            //    _mintRewards(isChilizOrApeCoin, totalPoints, msg.sender);
-            //     emit RewardsClaimed(gameweekCounter-1, msg.sender, totalPoints, isChilizOrApeCoin);
-            // }catch{
-            //     revert ZeroKnowledgeVerificationFailed();
-            // }
+            try zkVerifier.verify(_proof, _publicInputs)
+            {
+               _mintRewards(isChilizOrApeCoin, totalPoints, msg.sender);
+                emit RewardsClaimed(gameweekCounter-1, msg.sender, totalPoints, isChilizOrApeCoin);
+            }catch{
+                revert ZeroKnowledgeVerificationFailed();
+            }
         } else{
             _mintRewards(isChilizOrApeCoin, totalPoints, msg.sender);
             emit RewardsClaimed(gameweekCounter-1, msg.sender, totalPoints, isChilizOrApeCoin);
