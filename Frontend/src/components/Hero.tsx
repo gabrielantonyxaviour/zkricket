@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-
+import { Pixelify_Sans } from "next/font/google";
+const pxsans = Pixelify_Sans({ subsets: ["latin"] });
 import AnkrModal from "./AnkrModal";
 
 export default function Hero() {
@@ -31,8 +32,8 @@ export default function Hero() {
         <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-4">
             <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:col-span-2 xl:col-auto">
-              Unleash Your Inner Cricket Guru. Play Fantasy Cricket on the
-              Blockchain with{" "}
+              Unleash Your Inner Cricket Guru . Play Fantasy Cricket on the{" "}
+              <span className={`${pxsans.className}`}>Blockchain</span> with{" "}
               <span className=" text-transparent bg-clip-text bg-gradient-to-br from-slate-300 to-[#01A4F1]">
                 ZKricket
               </span>
