@@ -1,34 +1,51 @@
+"use client";
 import FixtureCard from "@/components/FixtureCard";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pixelify_Sans } from "next/font/google";
+import fetchFixtures from "@/utils/supabaseFunctions/fetchFixtures";
 const pxsans = Pixelify_Sans({ subsets: ["latin"] });
-const Upcoming = [
-  {
-    fid: 1,
-    team1: "CSK",
-    team2: "MI",
-    title: "Indian Primere League",
-  },
-  {
-    fid: 2,
-    team1: "CSK",
-    team2: "RCB",
-    title: "Indian Primere League",
-  },
-  {
-    fid: 3,
-    team1: "CSK",
-    team2: "DC",
-    title: "Indian Primere League",
-  },
-  {
-    fid: 4,
-    team1: "CSK",
-    team2: "LSG",
-    title: "Indian Primere League",
-  },
-];
+
 function page() {
+  const [upcomingMatches, setupcomingMatches] = useState([]); // State to store upcoming matches
+  useEffect(() => {
+    const fetchUpcomingFixtures = async () => {
+      try {
+        // Fetch fixtures
+        const { message, response } = await fetchFixtures();
+
+        if (message === "Success") {
+          // Get current date
+          const currentDate = new Date();
+
+          // Filter upcoming matches
+          const filteredMatches = response.filter((match: any) => {
+            const startDate = new Date(Number(match.startDate));
+            return startDate > currentDate;
+          });
+
+          // Map the filtered matches to the desired format
+          const upcomingMatches = filteredMatches.map((match: any) => ({
+            id: match.id, // Assuming fid represents matchId
+            team1: match.team1,
+            team2: match.team2,
+            title: "Indian Primere League", // Common title
+          }));
+
+          // Set upcoming matches in state
+          const firstSixUpcomingMatches = upcomingMatches.slice(0, 6);
+          setupcomingMatches(firstSixUpcomingMatches);
+        } else {
+          console.error("Error fetching upcoming fixtures:", message);
+        }
+      } catch (error) {
+        console.error("Error fetching upcoming fixtures:", error);
+      }
+    };
+
+    // Call the function to fetch upcoming fixtures
+    fetchUpcomingFixtures();
+  }, []);
+
   return (
     <div>
       <div className="bg-white px-16 py-6 sm:pt-32 lg:px-16">
@@ -44,7 +61,7 @@ function page() {
         </div>
       </div>
       <div className="px-52 bg-white">
-        <FixtureCard fixtures={Upcoming} completed={false} />
+        <FixtureCard fixtures={upcomingMatches} completed={false} />
       </div>
       <div className="bg-white px-6 py-6 sm:pt-32 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
@@ -59,7 +76,7 @@ function page() {
         </div>
       </div>
       <div className="px-52 bg-white">
-        <FixtureCard fixtures={Upcoming} completed={true} />
+        <FixtureCard fixtures={upcomingMatches} completed={true} />
       </div>
     </div>
   );
