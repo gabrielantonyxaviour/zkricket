@@ -135,10 +135,11 @@ const pinFileToPinataRequest = Functions.makeHttpRequest({
 const [pinFileToPinataResponse] = await Promise.all([pinFileToPinataRequest]);
 
 const merkleRoot = computeMerkleRoot(padArrayWithZeros(points));
+
 console.log(merkleRoot);
 const returnDataHex = encodeAbiParameters(
   parseAbiParameters("bytes32, string"),
-  [merkleRoot, pinFileToPinataResponse.data.IpfsHash]
+  [merkleRoot, "pinFileToPinataResponse.data.IpfsHash"]
 );
 
 return hexToBytes(returnDataHex);

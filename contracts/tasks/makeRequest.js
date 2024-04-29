@@ -21,7 +21,7 @@ task(
   "make-request",
   "Makes a request to the Oracle function in the contract"
 ).setAction(async (taskArgs) => {
-  const zkricketOracleAddress = "0x85028ae19bbdc6beb9500aabd598e3e75ea7983e"; // REPLACE this with your Functions consumer address
+  const zkricketOracleAddress = "0x497f5b0aE3873604ac303582b13B66d14D520E7B"; // REPLACE this with your Functions consumer address
   const linkTokenAddress = "0x779877A7B0D9E8603169DdbD7836e478b4624789";
   const subscriptionId = 2435; // REPLACE this with your subscription ID
   const donId = "fun-ethereum-sepolia-1";

@@ -22,7 +22,7 @@ export function handleGamePlayerIdRemappingSet(
   if (game == null) {
     game = new Game(event.params.gameId.toString());
     game.playerIdRemapping = event.params.remapping;
-    game.predictionsStartTime = BigInt.fromI64(Date.now());
+    game.predictionsStartTime = event.block.timestamp;
     game.transactionHash = event.transaction.hash;
     game.save();
   }
@@ -60,7 +60,7 @@ export function handleSquadRegistered(event: SquadRegisteredEvent): void {
 export function handleResultsPublished(event: ResultsPublishedEvent): void {
   let game = Game.load(event.params.gameId.toString());
   if (game != null) {
-    game.resultsPublishedTime = BigInt.fromI64(Date.now());
+    game.resultsPublishedTime = event.block.timestamp;
     game.pointsMerkleRoot = event.params.pointsMerkleRoot;
     game.gameResults = event.params.gameResults;
     game.save();
