@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface Player {
   name: string;
@@ -75,39 +75,81 @@ interface PlayerImageProps {
   onClick: () => void;
 }
 
+// const PlayerImage: React.FC<PlayerImageProps> = ({
+//   name,
+//   index,
+//   player,
+//   onClick,
+// }) => {
+//   return (
+//     <>
+//       {player.team == "plain" ? (
+//         <img
+//           src={`/players/plain/${player.type}.png`}
+//           alt={`Player ${index + 1}`}
+//           className="absolute cursor-pointer w-20"
+//           onClick={onClick}
+//           style={{
+//             top: calculateTopPosition(index),
+//             left: calculateLeftPosition(index),
+//           }}
+//         />
+//       ) : (
+//         <img
+//           // src={`/players/${player.team}/${player.type}.png`}
+//           src={`/players/${player.team}/${player.type}.png`}
+//           alt={`Player ${index + 1}`}
+//           className="absolute cursor-pointer w-20"
+//           onClick={onClick}
+//           style={{
+//             top: calculateTopPosition(index),
+//             left: calculateLeftPosition(index),
+//           }}
+//         />
+//       )}
+//       <div
+//         className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black  rounded-md"
+//         onClick={onClick}
+//         style={{
+//           top: calculateTopTextPosition(index),
+//           left: calculateLeftPosition(index),
+//         }}
+//       >
+//         {name}
+//       </div>
+//     </>
+//   );
+// };
 const PlayerImage: React.FC<PlayerImageProps> = ({
   name,
   index,
   player,
   onClick,
 }) => {
+  const [imageUrl, setImageUrl] = useState<string>(
+    `/players/plain/${player.type}.png`
+  );
+
+  useEffect(() => {
+    console.log(player.type, player.team);
+    setImageUrl(`/players/${player.team}/${player.type}.png`);
+    console.log(`/players/${player.team}/${player.type}.png`);
+  }, [player.team, player.type]);
+
   return (
     <>
-      {player.team == "plain" ? (
-        <img
-          src={`/players/plain/${player.type}.png`}
-          alt={`Player ${index + 1}`}
-          className="absolute cursor-pointer w-20"
-          onClick={onClick}
-          style={{
-            top: calculateTopPosition(index),
-            left: calculateLeftPosition(index),
-          }}
-        />
-      ) : (
-        <img
-          src={`/players/${player.team}/${player.type}.png`}
-          alt={`Player ${index + 1}`}
-          className="absolute cursor-pointer w-20"
-          onClick={onClick}
-          style={{
-            top: calculateTopPosition(index),
-            left: calculateLeftPosition(index),
-          }}
-        />
-      )}
+      <img
+        src={imageUrl}
+        alt={`Player ${index + 1}`}
+        className="absolute cursor-pointer w-20"
+        onClick={onClick}
+        style={{
+          top: calculateTopPosition(index),
+          left: calculateLeftPosition(index),
+        }}
+      />
       <div
-        className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black  rounded-md"
+        className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black rounded-md"
         onClick={onClick}
         style={{
           top: calculateTopTextPosition(index),
