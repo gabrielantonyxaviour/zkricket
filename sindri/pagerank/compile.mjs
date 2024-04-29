@@ -4,7 +4,7 @@ const FormData = (await import("form-data")).default;
 const fs = (await import("fs")).default;
 const process = (await import("process")).default;
 const tar = (await import("tar")).default;
-
+import "dotenv/config";
 // Make sure to provide your actual API key here.
 const SINDRI_API_KEY = process.env.SINDRI_API_KEY || "<your-key-here>";
 
