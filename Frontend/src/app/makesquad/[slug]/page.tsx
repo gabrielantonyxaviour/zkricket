@@ -121,7 +121,6 @@ export default function Page({ params }: { params: { slug: string } }) {
         setOpen={setOpen}
         setPlayerPositions={setPlayerPositions}
       />
-      {/* <Logs /> */}
       <div className="pt-10 bg-white">
         <div className="flex flex-row">
           <Link href={"/fixtures"}>
@@ -154,14 +153,13 @@ export default function Page({ params }: { params: { slug: string } }) {
               Submit Squad
             </a>
           </div>
-          <div className="mt-10 flex items-center gap-x-6">
-            <a
-              href="#"
-              className="rounded-md shad bg-[#abb526] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#bdc646] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              View Logs
-            </a>
+        </div>
+
+        <div className="px-24">
+          <div className=" pr-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold">
+            Logs
           </div>
+          <Logs />
         </div>
       </div>
     </>
