@@ -14,83 +14,61 @@ error InvalidGameweek(uint256 gameweek);
 error SelectSquadDisabled(uint256 gameweek);
 error InadequateCrosschainFee(uint32 destinationDomain, uint256 requiredFee, uint256 sentFee);
 error ZeroKnowledgeVerificationFailed();
-error NotAllowedCaller(
-        address caller,
-        address automationRegistry,
-        address owner
-    );
+error NotAllowedCaller(address caller, address owner);
+error NotAllowedCrosschainCaller(bytes32 caller);
 error UnexpectedRequestID(bytes32 requestId);
 error ResultsNotPublished(uint256 gameweek);
 
-contract ZkCricket is FunctionsClient, ConfirmedOwner {
+contract ZkCricket {
     // Library Imports
     using Strings for uint256;
     using FunctionsRequest for FunctionsRequest.Request;  
 
     // ZkCricket Variables
-    mapping(uint256=>mapping(address=>bytes32)) public gameWeekToSquadHash;
-    mapping(uint256=>string) public gameWeekResults;
-    mapping(uint256=>mapping(uint256=>uint256)) public playerPoints;
-    mapping(address=>uint256) public addressToNullifier;
-    mapping(uint256=>address[])public nulliferToAddresses;
+    mapping(uint256=>mapping(address=>bytes32)) public gameToSquadHash;
+    mapping(uint256=>mapping(address=>uint256)) public gamePoints;
+    mapping(uint256=>string) public gameResults;
     mapping(uint256=>bytes32) public pointsMerkleRoot;
-    uint256 public gameweekCounter;
+    mapping(uint256=>string) public playerIdRemappings;
+    mapping(uint256=>bool) public isSelectSquadEnabled;
+    uint256 public gameCounter;
     string[] public playersMetadata;
-    bool public isSelectSquadEnabled;
+    address public owner;
 
     // Hyperlane Variables
     IMailbox public mailbox;
     mapping(bool=>bytes32) public destinationAddress;
+    bytes32 public oracleAddress;
     mapping(bool=>uint32) public destinationChainIds;
 
     // zk Variables
     UltraVerifier public zkVerifier; 
     bool public isZkVerificationEnabled;
 
-    // Chainlink Variables
-    bytes32 public donId;
-    address public functionsRouter;
-    address public upkeepContract;
-    bytes public request;
-    string public sourceCode;
-    bytes32 public s_lastRequestId;
-    bytes public s_lastResponse;
-    bytes public s_lastError;
-    uint32 public s_callbackGasLimit=300000;
-    uint64 public s_subscriptionId;
-    mapping(bytes32=>uint256) public requestToGameweek;
-
-    constructor(address _functionsRouter, IMailbox _mailbox, string[] memory _playersMetadata, string memory _sourceCode) 
-    FunctionsClient(_functionsRouter) ConfirmedOwner(msg.sender) 
+    constructor(uint256 _initialGameId, IMailbox _mailbox) 
     {
         // Hyperlane Initializations
         mailbox = _mailbox;
 
         // ZkCricket Initializations
-        isSelectSquadEnabled = true;
-        isZkVerificationEnabled = false;
-        gameweekCounter = 1;
-        playersMetadata = _playersMetadata;
-        emit PlayersMetadataUpdated(playersMetadata.length, _playersMetadata);
+        isZkVerificationEnabled = true;
+        gameCounter = _initialGameId;
+        owner=msg.sender;
 
         // zk Initializations
         zkVerifier=new UltraVerifier();
 
-        // Chainlink Initializations
-        functionsRouter=_functionsRouter;
-        sourceCode=_sourceCode;
     }
 
     event PlayersMetadataUpdated(uint256 playersMetadataLength, string[] playersMetadata);
     event SquadRegistered(uint256 gameweek, bytes32 squadHash, address registrant);
-    event RewardsClaimed(uint256 gameweek, address claimer, uint256 totalPoints, bool isChilizOrApeCoin);
+    event PointsClaimed(uint256 gameweek, address claimer, uint256 totalPoints);
     event ResultsFetchInitiated(uint256 gameweek, bytes32 requestId);
-    event ResultsPublished(bytes32 indexed requestId, bytes32 pointsMerkleRoot, string gameWeekResults);
+    event ResultsPublished(uint256 gameId, bytes32 pointsMerkleRoot, string gameResults);
     event ResultsFetchFailed(uint256 gameweek, bytes32 requestId, bytes error);
 
-    modifier onlyAllowed() {
-        if (msg.sender != owner() && msg.sender != upkeepContract)
-            revert NotAllowedCaller(msg.sender, owner(), upkeepContract);
+    modifier onlyOwner() {
+        if (msg.sender != owner) revert NotAllowedCaller(msg.sender, owner);
         _;
     }
 
@@ -99,101 +77,56 @@ contract ZkCricket is FunctionsClient, ConfirmedOwner {
         _;
     }
 
-    function registerMorePlayers(string[] memory _playersMetadata) public onlyOwner {
+    function setOracleAddress(bytes32 _oracleAddress) public onlyOwner{
+        oracleAddress = _oracleAddress;
+    }
+
+    function setPlayerIdRemmapings(uint256 _gameId, string memory _remapping) public onlyOwner {
+        playerIdRemappings[_gameId] = _remapping;
+        isSelectSquadEnabled[_gameId] = true;
+        gameCounter=_gameId;
+    }
+
+    function registerPlayers(string[] memory _playersMetadata) public onlyOwner {
         for(uint256 i=0; i<_playersMetadata.length; i++) playersMetadata.push(_playersMetadata[i]);
         emit PlayersMetadataUpdated(playersMetadata.length, _playersMetadata);
     }
 
-    function registerSquad(uint256 _gameWeek, bytes32 _squadHash) public {
-        if(!isSelectSquadEnabled) revert SelectSquadDisabled(_gameWeek);
-        if(_gameWeek > gameweekCounter) revert InvalidGameweek(_gameWeek);
- 
-        gameWeekToSquadHash[_gameWeek][msg.sender] = _squadHash;
-        emit SquadRegistered(_gameWeek, _squadHash, msg.sender);
+    function registerSquad(uint256 _gameId, bytes32 _squadHash) public {
+        if(!isSelectSquadEnabled[_gameId]) revert SelectSquadDisabled(_gameId);
+
+        gameToSquadHash[_gameId][msg.sender] = _squadHash;
+        emit SquadRegistered(_gameId, _squadHash, msg.sender);
     }
 
-    function claimRewards(uint256 totalPoints, bytes calldata _proof, bool isChilizOrApeCoin) public payable {
-        if(gameweekCounter == 0) revert InvalidGameweek(gameweekCounter);
-        if(pointsMerkleRoot[gameweekCounter] == bytes32(0)) revert ResultsNotPublished(gameweekCounter);
+    function claimPoints(uint256 gameId, uint256 totalPoints, bytes calldata _proof) public payable {
+        if(pointsMerkleRoot[gameId] == bytes32(0)) revert ResultsNotPublished(gameId);
 
         if(isZkVerificationEnabled){
             bytes32[] memory _publicInputs=new bytes32[](2);
-            _publicInputs[0]=pointsMerkleRoot[gameweekCounter];
-            _publicInputs[1]=gameWeekToSquadHash[gameweekCounter][msg.sender];
+            _publicInputs[0]=pointsMerkleRoot[gameId];
+            _publicInputs[1]=gameToSquadHash[gameId][msg.sender];
             _publicInputs[2]= bytes32(totalPoints);
             try zkVerifier.verify(_proof, _publicInputs)
             {
-               _mintRewards(isChilizOrApeCoin, totalPoints, msg.sender);
-                emit RewardsClaimed(gameweekCounter-1, msg.sender, totalPoints, isChilizOrApeCoin);
+               gamePoints[gameId][msg.sender] = totalPoints;
+                emit PointsClaimed(gameCounter-1, msg.sender, totalPoints);
             }catch{
                 revert ZeroKnowledgeVerificationFailed();
             }
         } else{
-            _mintRewards(isChilizOrApeCoin, totalPoints, msg.sender);
-            emit RewardsClaimed(gameweekCounter-1, msg.sender, totalPoints, isChilizOrApeCoin);
+            gamePoints[gameId][msg.sender] = totalPoints;
+            emit PointsClaimed(gameCounter-1, msg.sender, totalPoints);
         }
     }
 
-    // Hyperlane Functions
-    function _mintRewards(bool isChilizOrApeCoin, uint256 totalPoints, address _claimer) internal {
-        uint32 destinationDomain = destinationChainIds[isChilizOrApeCoin];
-        bytes32 recepientAddress = destinationAddress[isChilizOrApeCoin];
-        bytes memory _data= abi.encode(gameweekCounter-1,totalPoints, _claimer);
-        uint256 _requiredFee = mailbox.quoteDispatch(destinationDomain, recepientAddress, _data);
-        if(msg.value < _requiredFee) revert InadequateCrosschainFee(destinationDomain, _requiredFee, msg.value);
-
-        bytes32 messageId = mailbox.dispatch{value: msg.value}(destinationDomain,recepientAddress, _data);
+    function handle(uint32 , bytes32 _sender, bytes calldata _message) external payable onlyMailbox{
+        if(_sender != oracleAddress) revert NotAllowedCrosschainCaller(_sender);
+        (uint256 _gameId, bytes32 _pointsMerkleRoot, string memory _gameResults) = abi.decode(_message, (uint256, bytes32, string));
+        pointsMerkleRoot[_gameId] = _pointsMerkleRoot;
+        gameResults[_gameId] = _gameResults;
+        emit ResultsPublished(_gameId, _pointsMerkleRoot, _gameResults);
     }
-
-    // Chainlink Automation
-    function setAutomationCronContract(
-        address _upkeepContract
-    ) external onlyOwner {
-        upkeepContract = _upkeepContract;
-    }
-
-    // Chainlink Functions
-    function updateRequest(
-        bytes memory _request,
-        uint64 _subscriptionId,
-        uint32 _gasLimit,
-        bytes32 _donID
-    ) external onlyOwner {
-        request = _request;
-        s_subscriptionId = _subscriptionId;
-        s_callbackGasLimit = _gasLimit;
-        donId = _donID;
-    }
-
-    function sendRequestCBOR()
-        external
-        onlyAllowed
-        returns (bytes32 requestId)
-    {
-        s_lastRequestId = _sendRequest(
-            request,
-            s_subscriptionId,
-            s_callbackGasLimit,
-            donId
-        );
-        requestToGameweek[s_lastRequestId] = gameweekCounter;
-        emit ResultsFetchInitiated(gameweekCounter, s_lastRequestId);
-        return s_lastRequestId;
-    }
-
-    function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override {
-        s_lastResponse = response;
-        s_lastError = err;
-        if(s_lastResponse.length == 0) {
-            emit ResultsFetchFailed(requestToGameweek[requestId], requestId, err);
-        }else{
-            (bytes32 _pointsMerkleRoot, string memory _gameWeekResults) = abi.decode(s_lastResponse, (bytes32, string));
-            pointsMerkleRoot[requestToGameweek[requestId]] = _pointsMerkleRoot;
-            gameWeekResults[requestToGameweek[requestId]] = _gameWeekResults;
-            emit ResultsPublished(requestId, _pointsMerkleRoot, _gameWeekResults);
-        }
-        gameweekCounter+=1;
-    } 
 
 
     // Testing helpers
@@ -203,12 +136,12 @@ contract ZkCricket is FunctionsClient, ConfirmedOwner {
         destinationAddress[false] = _destinationAddresses[0];
         destinationAddress[true] = _destinationAddresses[1];
     }
-    function setSelectSquadEnabled(bool _isSelectSquadEnabled) public onlyOwner {
-        isSelectSquadEnabled = _isSelectSquadEnabled;
+    function setSelectSquadEnabled(uint256 _gameId, bool _isSelectSquadEnabled) public onlyOwner {
+        isSelectSquadEnabled[_gameId] = _isSelectSquadEnabled;
     }
 
-    function setGameweekCounter(uint256 _gameweekCounter) public onlyOwner {
-        gameweekCounter = _gameweekCounter;
+    function setGameCounter(uint256 _gameCounter) public onlyOwner {
+        gameCounter = _gameCounter;
     }
 
     function setPointsMerkleRoot(uint256 _gameweek, bytes32 _pointsMerkleRoot) public onlyOwner {
