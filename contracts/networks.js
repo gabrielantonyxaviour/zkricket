@@ -52,16 +52,15 @@ const networks = {
     nativeCurrencySymbol: "ETH",
     protocol: "0x094605EB62e5AF67b9b03f51f313C747C4c7dE66",
   },
-  chilizSpicy: {
-    url: "https://spicy-rpc.chiliz.com/",
+  scrollSepolia: {
+    url: "https://scroll-sepolia.drpc.org",
     gasPrice: undefined,
     nonce: undefined,
     accounts,
-    verifyApiKey: "fksnfjksn",
-    chainId: 88882,
+    verifyApiKey: process.env.SCROLL_API_KEY,
+    chainId: 534351,
     confirmations: DEFAULT_VERIFICATION_BLOCK_CONFIRMATIONS,
-    nativeCurrencySymbol: "CHZ",
-    rewards: "0xD6942c706b338a2AdFb79C98d7D0EcF776c39bc1",
+    nativeCurrencySymbol: "ETH",
   },
   ethereumSepolia: {
     url: process.env.SEPOLIA_RPC_URL || "UNSET",

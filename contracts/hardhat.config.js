@@ -67,11 +67,11 @@ module.exports = {
         },
       },
       {
-        network: "chilizSpicy",
+        network: "scrollSepolia",
         chainId: networks.chilizSpicy.chainId,
         urls: {
-          apiURL: `https://api.routescan.io/v2/network/testnet/evm/${networks.chilizSpicy.chainId}/etherscan`,
-          browserURL: "https://testnet.chiliscan.com/",
+          apiURL: `https://api-sepolia.scrollscan.com/api`,
+          browserURL: "https://scrollscan.com/",
         },
       },
     ],
