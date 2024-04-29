@@ -279,6 +279,7 @@ const Addplayer: React.FC<AddPlayerProps> = ({
                                           team: person.team as any,
                                           type: person.role as any,
                                         });
+                                        setOpen(false);
                                       }}
                                     >
                                       Add Player
