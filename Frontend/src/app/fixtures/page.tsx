@@ -5,7 +5,7 @@ import { Pixelify_Sans } from "next/font/google";
 import fetchFixtures from "@/utils/supabaseFunctions/fetchFixtures";
 const pxsans = Pixelify_Sans({ subsets: ["latin"] });
 
-function page() {
+function Page() {
   const [upcomingMatches, setupcomingMatches] = useState([]); // State to store upcoming matches
   useEffect(() => {
     const fetchUpcomingFixtures = async () => {
@@ -60,10 +60,10 @@ function page() {
           </p>
         </div>
       </div>
-      <div className="px-12 bg-white">
+      <div className="px-24 bg-white">
         <FixtureCard fixtures={upcomingMatches} completed={false} />
       </div>
-      <div className="bg-white px-6 py-6 sm:pt-32 lg:px-8">
+      <div className="bg-white px-16 py-6 sm:pt-32 lg:px-16">
         <div className="mx-auto max-w-2xl text-center">
           <h2
             className={`text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl ${pxsans.className}`}
@@ -71,12 +71,12 @@ function page() {
             Ongoing Fixtures
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            View Ongoing fixtures
+            Participate in Ongoing fixtures
           </p>
         </div>
       </div>
-      <div className="px-12 bg-white">
-        <FixtureCard fixtures={Upcoming} completed={true} />
+      <div className="px-24 bg-white">
+        <FixtureCard fixtures={upcomingMatches} completed={false} />
       </div>
       <div className="bg-white px-6 py-6 sm:pt-32 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
@@ -90,11 +90,11 @@ function page() {
           </p>
         </div>
       </div>
-      <div className="px-12 bg-white">
+      <div className="px-24 bg-white">
         <FixtureCard fixtures={upcomingMatches} completed={true} />
       </div>
     </div>
   );
 }
 
-export default page;
+export default Page;
