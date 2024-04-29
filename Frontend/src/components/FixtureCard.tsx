@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function FixtureCard(props: {
   fixtures: {
-    fid: number;
+    id: number;
     team1: string;
     team2: string;
     title: string;
@@ -21,7 +21,7 @@ export default function FixtureCard(props: {
         >
           {fixtures.map((person) => (
             <li
-              key={person.fid}
+              key={person.id}
               className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
             >
               <div className="flex w-full items-center justify-between space-x-6 p-6">
@@ -59,7 +59,7 @@ export default function FixtureCard(props: {
                 <div className="-mt-px flex divide-x divide-gray-200">
                   <div className="flex w-0 flex-1">
                     <Link
-                      href={`/leaderboard/${person.fid}`}
+                      href={`/leaderboard/${person.id}`}
                       className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
                     >
                       {" "}
@@ -74,7 +74,7 @@ export default function FixtureCard(props: {
                   {!completed && (
                     <div className="-ml-px flex w-0 flex-1">
                       <Link
-                        href={`/makesquad/${person.fid}`}
+                        href={`/makesquad/${person.id}`}
                         className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
                       >
                         <PlusIcon

@@ -16,7 +16,7 @@ task("deploy-oracle", "Deploys the ZkCricketOracle contract")
     const args = [
       "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0",
       "534351",
-      "0x" + "C044FCe37927A0Cb55C7e57425Fe3772181228a6".padStart(64, "0"),
+      "0x" + "09f1af4e16728fcf340051055159f0f9d5e00b54".padStart(64, "0"),
       "0xfFAEF09B3cd11D9b20d1a19bECca54EEC2884766",
       fs.readFileSync("./oracle-script.js", "utf8"),
       "2435",
