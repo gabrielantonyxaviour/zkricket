@@ -148,53 +148,15 @@ const Addplayer: React.FC<AddPlayerProps> = ({
       return updatedPositions;
     });
   };
-  const [playerImages, setPlayerImages] = useState<(string | null)[]>([]);
-  useEffect(() => {
-    const fetchImages = async () => {
-      const imageUrls = await Promise.all(
-        player.map(async (person) => {
-          if (person.imageId) {
-            return await getImage(person.imageId);
-          } else {
-            return null;
-          }
-        })
-      );
-      setPlayerImages(imageUrls);
-    };
 
-    fetchImages();
-  }, [player]);
-  const getImage = async (id: number): Promise<string> => {
-    const url = `https://cricbuzz-cricket.p.rapidapi.com/stats/v1/player/${id}`;
-    const headers: HeadersInit = {
-      "X-RapidAPI-Key": process.env.CRICKET_API || "", // Ensure process.env.CRICKET_API is not undefined
-      "X-RapidAPI-Host": "cricbuzz-cricket.p.rapidapi.com",
-    };
-
-    const options: RequestInit = {
-      method: "GET",
-      headers: headers,
-    };
-
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      return data.image || null; // Return image URL or null if not found
-    } catch (error) {
-      console.error(error); // Log the error
-      return ""; // Return null in case of error
-    }
-  };
-
-  const renderImage = (index: number) => {
+  const renderImage = (index: any) => {
     return (
       <img
         className="h-11 w-11 rounded-full"
-        src={playerImages[index] || "/default.png"}
+        src={
+          `https://i.cricketcb.com/stats/img/faceImages/${index}.jpg` ||
+          "/default.png"
+        }
         alt=""
       />
     );
@@ -287,7 +249,7 @@ const Addplayer: React.FC<AddPlayerProps> = ({
                                         }
                                         alt=""
                                       /> */}
-                                      {renderImage(index)}
+                                      {renderImage(person.id)}
                                     </div>
                                     <div className="ml-4">
                                       <div className="font-medium text-gray-900">
