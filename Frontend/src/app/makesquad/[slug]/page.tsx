@@ -1,5 +1,6 @@
 "use client";
 import Addplayer from "@/components/Addplayer";
+import Logs from "@/components/Logs";
 import Pitch from "@/components/Pitch";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
@@ -97,6 +98,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         setOpen={setOpen}
         setPlayerPositions={setPlayerPositions}
       />
+      {/* <Logs /> */}
       <div className="pt-10 bg-white">
         <div className="flex flex-row">
           <Link href={"/fixtures"}>
@@ -111,20 +113,30 @@ export default function Page({ params }: { params: { slug: string } }) {
             </div>
           </div>
         </div>
-        <Pitch
-          index={index}
-          setindex={setindex}
-          open={open}
-          setOpen={setOpen}
-          playerPositions={playerPositions}
-        />
-        <div className="flex items-center justify-center">
+        <div className="pt-20">
+          <Pitch
+            index={index}
+            setindex={setindex}
+            open={open}
+            setOpen={setOpen}
+            playerPositions={playerPositions}
+          />
+        </div>
+        <div className="flex items-center justify-center gap-3">
           <div className="mt-10 flex items-center gap-x-6">
             <a
               href="#"
               className="rounded-md shad bg-[#01A4F1] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Submit Squad
+            </a>
+          </div>
+          <div className="mt-10 flex items-center gap-x-6">
+            <a
+              href="#"
+              className="rounded-md shad bg-[#abb526] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#bdc646] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              View Logs
             </a>
           </div>
         </div>
