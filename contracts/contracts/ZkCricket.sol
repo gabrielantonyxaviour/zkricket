@@ -60,6 +60,7 @@ contract ZkCricket {
 
     }
 
+    event GamePlayerIdRemappingSet(uint256 gameId, string remapping);
     event PlayersMetadataUpdated(uint256 playersMetadataLength, string[] playersMetadata);
     event SquadRegistered(uint256 gameweek, bytes32 squadHash, address registrant);
     event PointsClaimed(uint256 gameweek, address claimer, uint256 totalPoints);
@@ -85,6 +86,7 @@ contract ZkCricket {
         playerIdRemappings[_gameId] = _remapping;
         isSelectSquadEnabled[_gameId] = true;
         gameCounter=_gameId;
+        emit GamePlayerIdRemappingSet(_gameId, _remapping);
     }
 
     function registerPlayers(string[] memory _playersMetadata) public onlyOwner {

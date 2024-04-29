@@ -65,6 +65,10 @@ contract ZkCricketOracle is FunctionsClient, ConfirmedOwner {
         _;
     }
 
+    function setProtocolAddress(bytes32 _protocolAddress) public onlyOwner {
+        protocolAddress=_protocolAddress;
+    }
+
     function setPlayerIdRemmapings(uint256 _gameId, string memory _remapping) public onlyOwner {
         playerIdRemappings[_gameId] = _remapping;
         gameId=_gameId;

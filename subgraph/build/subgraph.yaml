@@ -2,7 +2,7 @@ specVersion: 1.0.0
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: ZkCricket
@@ -25,7 +25,7 @@ dataSources:
         - GamePlayerIdRemappingSet
       abis:
         - name: ZkCricket
-          file: ./abis/ZkCricket.json
+          file: ZkCricket/abis/ZkCricket.json
       eventHandlers:
         - event: PlayersMetadataUpdated(uint256,string[])
           handler: handlePlayersMetadataUpdated
@@ -41,4 +41,4 @@ dataSources:
           handler: handleSquadRegistered
         - event: GamePlayerIdRemappingSet(uint256,string)
           handler: handleGamePlayerIdRemappingSet
-      file: ./src/zk-cricket.ts
+      file: ZkCricket/ZkCricket.wasm
