@@ -12,7 +12,7 @@ const {
   ResponseListener,
   FulfillmentCode,
 } = require("@chainlink/functions-toolkit");
-const zkCricketAbi = require("../build/artifacts/contracts/ZkCricket.sol/ZkCricket.json");
+const zkCricketOracleAbi = require("../build/artifacts/contracts/ZkCricketOracle.sol/ZkCricketOracle.json");
 const ethers = require("ethers");
 const { networks } = require("../networks");
 require("@chainlink/env-enc").config();
@@ -21,13 +21,22 @@ task(
   "make-request",
   "Makes a request to the Oracle function in the contract"
 ).setAction(async (taskArgs) => {
-  const zkricketAddress = "0xDc59057716677afE37755e8aA256c8d852D62f64"; // REPLACE this with your Functions consumer address
-  const linkTokenAddress = "0xb1D4538B4571d411F07960EF2838Ce337FE1E80E";
-  const subscriptionId = 37; // REPLACE this with your subscription ID
-  const donId = "fun-arbitrum-sepolia-1";
-  const routerAddress = "0x234a5fb5Bd614a7AA2FfAB244D603abFA0Ac5C5C";
-
-  const explorerUrl = "https://sepolia.arbiscan.io";
+  const zkricketOracleAddress = "0x85028ae19bbdc6beb9500aabd598e3e75ea7983e"; // REPLACE this with your Functions consumer address
+  const linkTokenAddress = "0x779877A7B0D9E8603169DdbD7836e478b4624789";
+  const subscriptionId = 2435; // REPLACE this with your subscription ID
+  const donId = "fun-ethereum-sepolia-1";
+  const routerAddress = "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0";
+  const gatewayUrls = [
+    "https://01.functions-gateway.testnet.chain.link/",
+    "https://02.functions-gateway.testnet.chain.link/",
+  ];
+  const secrets = {
+    pinataKey: process.env.PINATA_API_KEY || "",
+    cricBuzzKey: process.env.CRICKET_API_KEY || "",
+  };
+  const slotIdNumber = 0; // slot ID where to upload the secrets
+  const expirationTimeMinutes = 150; // expiration time in minutes of the secrets
+  const explorerUrl = "https://sepolia.etherscan.io";
 
   const gasLimit = 300000;
 
@@ -38,7 +47,7 @@ task(
       "private key not provided - check your environment variables"
     );
 
-  const rpcUrl = networks.arbitrumSepolia.url; // fetch mumbai RPC URL
+  const rpcUrl = networks.ethereumSepolia.url; // fetch eth sepolia RPC URL
 
   if (!rpcUrl)
     throw new Error(`rpcUrl not provided  - check your environment variables`);
@@ -81,14 +90,49 @@ task(
 
   console.log("\nMake request...");
 
-  const zkCricket = new ethers.Contract(
-    zkricketAddress,
-    zkCricketAbi.abi,
+  // First encrypt secrets and upload the encrypted secrets to the DON
+  const secretsManager = new SecretsManager({
+    signer: signer,
+    functionsRouterAddress: routerAddress,
+    donId: donId,
+  });
+  await secretsManager.initialize();
+
+  // Encrypt secrets and upload to DON
+  const encryptedSecretsObj = await secretsManager.encryptSecrets(secrets);
+
+  console.log(
+    `Upload encrypted secret to gateways ${gatewayUrls}. slotId ${slotIdNumber}. Expiration in minutes: ${expirationTimeMinutes}`
+  );
+  // Upload secrets
+  const uploadResult = await secretsManager.uploadEncryptedSecretsToDON({
+    encryptedSecretsHexstring: encryptedSecretsObj.encryptedSecrets,
+    gatewayUrls: gatewayUrls,
+    slotId: slotIdNumber,
+    minutesUntilExpiration: expirationTimeMinutes,
+  });
+
+  if (!uploadResult.success)
+    throw new Error(`Encrypted secrets not uploaded to ${gatewayUrls}`);
+
+  console.log(
+    `\n✅ Secrets uploaded properly to gateways ${gatewayUrls}! Gateways response: `,
+    uploadResult
+  );
+
+  const donHostedSecretsVersion = parseInt(uploadResult.version); // fetch the version of the encrypted secrets
+
+  const zkCricketOracle = new ethers.Contract(
+    zkricketOracleAddress,
+    zkCricketOracleAbi.abi,
     signer
   );
 
   // Actual transaction call
-  const transaction = await zkCricket.sendRequestCBOR();
+  const transaction = await zkCricketOracle.triggerFetchGameResults(
+    slotIdNumber,
+    donHostedSecretsVersion
+  );
 
   // Log transaction details
   console.log(

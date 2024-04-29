@@ -1,0 +1,57 @@
+type PlayersMetadataUpdated @entity(immutable: true) {
+  id: Bytes!
+  playersMetadataLength: BigInt! # uint256
+  playersMetadata: [String!]! # string[]
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PointsClaimed @entity(immutable: true) {
+  id: Bytes!
+  gameweek: BigInt! # uint256
+  claimer: Bytes! # address
+  totalPoints: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ResultsFetchFailed @entity(immutable: true) {
+  id: Bytes!
+  gameweek: BigInt! # uint256
+  requestId: Bytes! # bytes32
+  error: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ResultsFetchInitiated @entity(immutable: true) {
+  id: Bytes!
+  gameweek: BigInt! # uint256
+  requestId: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ResultsPublished @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  pointsMerkleRoot: Bytes! # bytes32
+  gameResults: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SquadRegistered @entity(immutable: true) {
+  id: Bytes!
+  gameweek: BigInt! # uint256
+  squadHash: Bytes! # bytes32
+  registrant: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

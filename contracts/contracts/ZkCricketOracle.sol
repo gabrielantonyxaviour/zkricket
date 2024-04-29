@@ -78,7 +78,7 @@ contract ZkCricketOracle is FunctionsClient, ConfirmedOwner {
             donHostedSecretsSlotID,
             donHostedSecretsVersion
         );
-        string[] memory args;
+        string[] memory args= new string[](2);
         args[0]=Strings.toString(gameId);
         args[1]=playerIdRemappings[gameId];
         s_lastRequestId = _sendRequest(
