@@ -1,4 +1,8 @@
-import { PlusIcon, ChartBarIcon } from "@heroicons/react/20/solid";
+import {
+  PlusIcon,
+  ChartBarIcon,
+  ViewfinderCircleIcon,
+} from "@heroicons/react/20/solid";
 import Link from "next/link";
 
 export default function FixtureCard(props: {
@@ -8,10 +12,10 @@ export default function FixtureCard(props: {
     team2: string;
     title: string;
   }[];
-  completed: boolean;
+  state: number;
 }) {
   const fixtures = props.fixtures;
-  const completed = props.completed;
+  const state = props.state;
   return (
     <div className="bg-white">
       <div className="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20 p-14 ">
@@ -32,12 +36,18 @@ export default function FixtureCard(props: {
                     </h3>
                     <span
                       className={`inline-flex flex-shrink-0 items-center rounded-full  px-1.5 py-0.5 text-xs font-medium ${
-                        completed
+                        state == 2
                           ? "bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20"
+                          : state == 1
+                          ? "bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20"
                           : "bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20"
                       }`}
                     >
-                      {completed ? "Entries Closed" : "Entries Open"}
+                      {state == 2
+                        ? "Entries Closed"
+                        : state == 1
+                        ? "Claim Points Now"
+                        : "Entries Open"}
                     </span>
                   </div>
                   <p className="mt-1 truncate text-sm text-gray-500">
@@ -71,17 +81,24 @@ export default function FixtureCard(props: {
                     </Link>
                   </div>
 
-                  {!completed && (
+                  {state != 2 && (
                     <div className="-ml-px flex w-0 flex-1">
                       <Link
                         href={`/makesquad/${person.id}`}
                         className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
                       >
-                        <PlusIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        Make Squad
+                        {state == 0 ? (
+                          <PlusIcon
+                            className="h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <ViewfinderCircleIcon
+                            className="h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        )}
+                        {state == 0 ? "Make Squad" : "View Squad"}
                       </Link>
                     </div>
                   )}
