@@ -120,6 +120,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         open={open}
         setOpen={setOpen}
         setPlayerPositions={setPlayerPositions}
+        slug={params.slug}
       />
       <div className="pt-10 bg-white">
         <div className="flex flex-row">

@@ -9,7 +9,8 @@ import {
   useState,
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { csk, rcb, rr, kkr, dc, pbks, lsg, gt, srh } from "@/data/teams";
+import { csk, rcb, rr, kkr, dc, pbks, lsg, gt, srh, mi } from "@/data/teams";
+import fetchMatchDetail from "@/utils/supabaseFunctions/fetchMatchDetails";
 interface PlayerPitch {
   name: string;
   team:
@@ -34,15 +35,44 @@ interface AddPlayerProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setPlayerPositions: Dispatch<SetStateAction<PlayerPitch[]>>;
+  slug: string;
 }
+
+const teamShortForms: { [key: string]: string } = {
+  "Chennai Super Kings": "CSK",
+  "Royal Challengers Bangalore": "RCB",
+  "Mumbai Indians": "MI",
+  "Delhi Capitals": "DC",
+  "Kolkata Knight Riders": "KKR",
+  "Punjab Kings": "PBKS",
+  "Rajasthan Royals": "RR",
+  "Sunrisers Hyderabad": "SRH",
+  "Gujarat Titans": "GT",
+  "Lucknow Super Giants": "LSG",
+};
+
 const Addplayer: React.FC<AddPlayerProps> = ({
   open,
   teams,
   index,
   setPlayerPositions,
   setOpen,
+  slug,
 }) => {
-  const team = ["rcb", "csk"];
+  const [team, setteams] = useState<string[]>(["rcb", "mi"]);
+  useEffect(() => {
+    const fetchTeams = async () => {
+      const { message, response } = await fetchMatchDetail(slug);
+      if (message === "Success") {
+        setteams([
+          teamShortForms[response[0].team1].toLowerCase(),
+          teamShortForms[response[0].team2].toLowerCase(),
+        ]);
+      }
+    };
+    fetchTeams();
+  }, []);
+  // const team = ["mi", "csk"];
   interface Player {
     id?: string;
     name: string;
@@ -65,6 +95,7 @@ const Addplayer: React.FC<AddPlayerProps> = ({
     lsg: lsg,
     gt: gt,
     srh: srh,
+    mi: mi,
   };
   useEffect(() => {
     if (index === 10) {
