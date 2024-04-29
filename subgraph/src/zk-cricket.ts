@@ -18,9 +18,9 @@ import {
 export function handleGamePlayerIdRemappingSet(
   event: GamePlayerIdRemappingSetEvent
 ): void {
-  let game = Game.load(event.params.gameId.toString());
+  let game = Game.load(event.params.gameId.toHexString());
   if (game == null) {
-    game = new Game(event.params.gameId.toString());
+    game = new Game(event.params.gameId.toHexString());
     game.playerIdRemapping = event.params.remapping;
     game.predictionsStartTime = event.block.timestamp;
     game.transactionHash = event.transaction.hash;
@@ -41,16 +41,18 @@ export function handleSquadRegistered(event: SquadRegisteredEvent): void {
   user.save();
 
   let prediction = Prediction.load(
-    event.params.gameweek.toString() + "-" + event.params.registrant.toString()
+    event.params.gameweek.toHexString() +
+      "-" +
+      event.params.registrant.toHexString()
   );
   if (prediction == null) {
     prediction = new Prediction(
-      event.params.gameweek.toString() +
+      event.params.gameweek.toHexString() +
         "-" +
-        event.params.registrant.toString()
+        event.params.registrant.toHexString()
     );
-    prediction.game = event.params.gameweek.toString();
-    prediction.user = event.params.registrant.toString();
+    prediction.game = event.params.gameweek.toHexString();
+    prediction.user = event.params.registrant.toHexString();
     prediction.squadHash = event.params.squadHash;
     prediction.transactionHash = event.transaction.hash;
     prediction.save();
@@ -58,7 +60,7 @@ export function handleSquadRegistered(event: SquadRegisteredEvent): void {
 }
 
 export function handleResultsPublished(event: ResultsPublishedEvent): void {
-  let game = Game.load(event.params.gameId.toString());
+  let game = Game.load(event.params.gameId.toHexString());
   if (game != null) {
     game.resultsPublishedTime = event.block.timestamp;
     game.pointsMerkleRoot = event.params.pointsMerkleRoot;
@@ -75,21 +77,27 @@ export function handlePointsClaimed(event: PointsClaimedEvent): void {
     user.save();
   }
   let claim = Claim.load(
-    event.params.gameweek.toString() + "-" + event.params.claimer.toString()
+    event.params.gameweek.toHexString() +
+      "-" +
+      event.params.claimer.toHexString()
   );
   if (claim == null) {
     claim = new Claim(
-      event.params.gameweek.toString() + "-" + event.params.claimer.toString()
+      event.params.gameweek.toHexString() +
+        "-" +
+        event.params.claimer.toHexString()
     );
-    claim.game = event.params.gameweek.toString();
-    claim.user = event.params.claimer.toString();
+    claim.game = event.params.gameweek.toHexString();
+    claim.user = event.params.claimer.toHexString();
     claim.prediction = claim.id;
     claim.points = event.params.totalPoints;
     claim.transactionHash = event.transaction.hash;
     claim.save();
   }
   let prediction = Prediction.load(
-    event.params.gameweek.toString() + "-" + event.params.claimer.toString()
+    event.params.gameweek.toHexString() +
+      "-" +
+      event.params.claimer.toHexString()
   );
   if (prediction != null) {
     prediction.claim = claim.id;
