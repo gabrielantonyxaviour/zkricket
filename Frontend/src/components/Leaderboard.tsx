@@ -1,5 +1,7 @@
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import request, { gql } from "graphql-request";
 import { Pixelify_Sans } from "next/font/google";
+import { useEffect } from "react";
 const pxsans = Pixelify_Sans({ subsets: ["latin"] });
 
 const people = [
@@ -84,6 +86,37 @@ const people = [
     commitmenthash: "afafasfasfas",
   },
 ];
+
+useEffect(() => {
+  const fetchLeaderboard = async () => {
+    try {
+      const data = await request(
+        "https://api.studio.thegraph.com/query/30735/zkricket/version/latest",
+        gql`
+          query MyQuery {
+            game(id: "0x1657b") {
+              claims {
+                points
+                transactionHash
+                user {
+                  address
+                }
+              }
+            }
+          }
+        `
+      );
+
+      // Extract ongoing matches from the data and set in state
+      const ongoingMatchesData = data;
+      console.log(data);
+      // setongoing(ongoingMatchesData);
+    } catch (error) {
+      console.error("Error fetching ongoing fixtures:", error);
+    }
+  };
+  fetchLeaderboard();
+}, []);
 
 export default function Leaderboard() {
   return (

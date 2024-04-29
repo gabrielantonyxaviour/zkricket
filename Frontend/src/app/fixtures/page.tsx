@@ -2,11 +2,13 @@
 import FixtureCard from "@/components/FixtureCard";
 import React, { useEffect, useState } from "react";
 import { Pixelify_Sans } from "next/font/google";
+import { request, gql } from "graphql-request";
 import fetchFixtures from "@/utils/supabaseFunctions/fetchFixtures";
 const pxsans = Pixelify_Sans({ subsets: ["latin"] });
 
 function Page() {
-  const [upcomingMatches, setupcomingMatches] = useState([]); // State to store upcoming matches
+  const [upcomingMatches, setupcomingMatches] = useState([]);
+  const [ongoing, setongoing] = useState([]);
   useEffect(() => {
     const fetchUpcomingFixtures = async () => {
       try {
@@ -44,6 +46,34 @@ function Page() {
 
     // Call the function to fetch upcoming fixtures
     fetchUpcomingFixtures();
+  }, []);
+  useEffect(() => {
+    async function fetchOngoingFixtures() {
+      try {
+        const data = await request(
+          "https://api.studio.thegraph.com/query/30735/zkricket/version/latest",
+          gql`
+            query MyQuery {
+              users(address: "0x0429A2Da7884CA14E53142988D5845952fE4DF6a") {
+                predictions {
+                  id
+                }
+              }
+            }
+          `
+        );
+
+        // Extract ongoing matches from the data and set in state
+        const ongoingMatchesData = data;
+        console.log(data);
+        // setongoing(ongoingMatchesData);
+      } catch (error) {
+        console.error("Error fetching ongoing fixtures:", error);
+      }
+    }
+
+    // Call the function to fetch ongoing fixtures
+    fetchOngoingFixtures();
   }, []);
 
   return (
