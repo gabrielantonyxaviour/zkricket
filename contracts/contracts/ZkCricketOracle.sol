@@ -115,5 +115,23 @@ contract ZkCricketOracle is FunctionsClient, ConfirmedOwner {
         bytes32 messageId = mailbox.dispatch{value: msg.value}(destinationDomain, protocolAddress, _data);
         emit ResultsDispatched(_gameId, messageId, _requiredFee);
     }
+
+    // Testing functions
+
+    function updateSourceCode(string memory _sourceCode) public onlyOwner {
+        sourceCode=_sourceCode;
+    }
+
+    function updateProtocolAddress(bytes32 _protocolAddress) public onlyOwner {
+        protocolAddress=_protocolAddress;
+    }
+
+    function setPointsMerkleRoot(uint256 _gameId, bytes32 _pointsMerkleRoot) public onlyOwner {
+        pointsMerkleRoot[_gameId] = _pointsMerkleRoot;
+    }
+
+    function setGameResults(uint256 _gameId, string memory _gameResults) public onlyOwner {
+        gameResults[_gameId] = _gameResults;
+    }
     
 }
