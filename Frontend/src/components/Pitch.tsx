@@ -29,6 +29,7 @@ interface PitchProps {
   setindex: React.Dispatch<React.SetStateAction<number>>;
   playerPositions: Player[];
   points: any[];
+  setPoints: (number: any) => void;
   showPoints: boolean;
 }
 
@@ -40,6 +41,7 @@ const Pitch: React.FC<PitchProps> = ({
   index,
   playerPositions,
   points,
+  setPoints,
   showPoints,
 }) => {
   const handlePlayerClick = (index: number) => {
@@ -59,6 +61,7 @@ const Pitch: React.FC<PitchProps> = ({
       const tpoints = remappedIds.map(
         (id: any) => gameResults[slug][id.toString()]
       );
+      setPoints(tpoints);
     }
   }, []);
 
