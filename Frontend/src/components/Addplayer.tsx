@@ -11,6 +11,7 @@ import {
 import { Dialog, Transition } from "@headlessui/react";
 import { csk, rcb, rr, kkr, dc, pbks, lsg, gt, srh, mi } from "@/data/teams";
 import fetchMatchDetail from "@/utils/supabaseFunctions/fetchMatchDetails";
+import { useAccount } from "wagmi";
 interface PlayerPitch {
   name: string;
   id: string;

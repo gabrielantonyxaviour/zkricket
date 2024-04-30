@@ -9,19 +9,18 @@ export const DynamicProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const evmNetworks = [
     {
       blockExplorerUrls: ["https://sepolia.scroll.io/"],
-      chainId: 421614,
+      chainId: 534351,
       chainName: "Scroll Sepolia",
-      iconUrls: ["https://luffy-eight.vercel.app/sponsors/5.png"],
+      iconUrls: ["https://app.dynamic.xyz/assets/networks/scroll.svg"],
       name: "Scroll Sepolia",
       nativeCurrency: {
         decimals: 18,
         name: "Ether",
         symbol: "ETH",
       },
-      networkId: 421614,
+      networkId: 534351,
       rpcUrls: [
-        process.env.NEXT_PUBLIC_ARB_SEPOLIA_URL ||
-          "https://rpc.ankr.com/scroll_sepolia_testnet",
+        `https://rpc.ankr.com/scroll_sepolia_testnet/${process.env.NEXT_PUBLIC_ANKR_RPC_KEY}`,
       ],
       vanityName: "Scroll sepolia",
     },

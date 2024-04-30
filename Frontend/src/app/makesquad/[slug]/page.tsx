@@ -6,7 +6,10 @@ import fetchMatchDetail from "@/utils/supabaseFunctions/fetchMatchDetails";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import { useReadContract } from "wagmi";
+import { protocolAbi, protocolAddress } from "@/utils/constants";
+import { createPublicClient, http } from "viem";
+import { scrollSepolia } from "viem/chains";
 export default function Page({ params }: { params: { slug: string } }) {
   const [addplr, setaddplr] = useState(false);
   const [index, setindex] = useState(0);
@@ -161,16 +164,23 @@ export default function Page({ params }: { params: { slug: string } }) {
           />
         </div>
         <div className="flex items-center justify-center gap-3">
-          <div className="mt-10 flex items-center gap-x-6">
+          <button
+            className="mt-10 flex items-center gap-x-6"
+            onClick={() => {
+              // compute squad hash
+              // send transaction on-chain
+              // display transaction in logs
+            }}
+          >
             <a
               href="#"
               className="rounded-md shad bg-[#01A4F1] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Submit Squad
             </a>
-          </div>
+          </button>
         </div>
-
+        <p className="text-black font-bold text-3xl">{}</p>
         <div className="px-24">
           <div className=" pr-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold">
             Logs
