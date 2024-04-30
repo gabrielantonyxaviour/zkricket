@@ -1,3 +1,4 @@
+"use client";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import request, { gql } from "graphql-request";
 import { Pixelify_Sans } from "next/font/google";
@@ -87,38 +88,38 @@ const people = [
   },
 ];
 
-useEffect(() => {
-  const fetchLeaderboard = async () => {
-    try {
-      const data = await request(
-        "https://api.studio.thegraph.com/query/30735/zkricket/version/latest",
-        gql`
-          query MyQuery {
-            game(id: "0x1657b") {
-              claims {
-                points
-                transactionHash
-                user {
-                  address
+export default function Leaderboard() {
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const data = await request(
+          "https://api.studio.thegraph.com/query/30735/zkricket/version/latest",
+          gql`
+            query MyQuery {
+              game(id: "0x1657b") {
+                claims {
+                  points
+                  transactionHash
+                  user {
+                    address
+                  }
                 }
               }
             }
-          }
-        `
-      );
+          `
+        );
 
-      // Extract ongoing matches from the data and set in state
-      const ongoingMatchesData = data;
-      console.log(data);
-      // setongoing(ongoingMatchesData);
-    } catch (error) {
-      console.error("Error fetching ongoing fixtures:", error);
-    }
-  };
-  fetchLeaderboard();
-}, []);
+        // Extract ongoing matches from the data and set in state
+        const ongoingMatchesData = data;
+        console.log(data);
+        // setongoing(ongoingMatchesData);
+      } catch (error) {
+        console.error("Error fetching ongoing fixtures:", error);
+      }
+    };
+    fetchLeaderboard();
+  }, []);
 
-export default function Leaderboard() {
   return (
     <div className="px-4 sm:px-6 lg:px-8 border-2 rounded-lg shadow-md heropattern-pixeldots-slate-50">
       <div className="sm:flex sm:items-center"></div>
