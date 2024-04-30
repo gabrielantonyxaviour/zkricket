@@ -1,4 +1,5 @@
 "use client";
+import { gameResults, playerIdRemappings } from "@/utils/constants";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface Player {
@@ -22,6 +23,7 @@ interface Player {
 
 interface PitchProps {
   open: boolean;
+  slug: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   index: number;
   setindex: React.Dispatch<React.SetStateAction<number>>;
@@ -32,6 +34,7 @@ interface PitchProps {
 
 const Pitch: React.FC<PitchProps> = ({
   open,
+  slug,
   setOpen,
   setindex,
   index,
@@ -44,6 +47,20 @@ const Pitch: React.FC<PitchProps> = ({
     setindex(index);
     setOpen(true);
   };
+
+  useEffect(() => {
+    let gameData = JSON.parse(localStorage.getItem("gameData") || "{}");
+    const playerIds = gameData[slug];
+    if (playerIds != null && playerIds != undefined) {
+      const remappedIds = playerIds.map(
+        (id: any) => playerIdRemappings[slug as string][id.toString()]
+      );
+      console.log(remappedIds);
+      const tpoints = remappedIds.map(
+        (id: any) => gameResults[slug][id.toString()]
+      );
+    }
+  }, []);
 
   return (
     <div className="bg-white">
@@ -61,6 +78,7 @@ const Pitch: React.FC<PitchProps> = ({
                 key={index}
                 index={index}
                 player={player}
+                points={points}
                 showPoints={showPoints}
                 onClick={() => handlePlayerClick(index)}
               />
@@ -77,6 +95,7 @@ interface PlayerImageProps {
   name: string;
   index: number;
   player: Player;
+  points: number[];
   showPoints: boolean;
   onClick: () => void;
 }
@@ -130,6 +149,7 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
   name,
   index,
   player,
+  points,
   showPoints,
   onClick,
 }) => {
@@ -141,9 +161,6 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
     setImageUrl(`/players/${player.team}/${player.type}.png`);
   }, [player.team, player.type]);
 
-  const [points, setPoints] = useState<number[]>([
-    0, 20, 30, 0, 0, 0, 101, 0, 0, 0, 0,
-  ]);
   return (
     <>
       <img
