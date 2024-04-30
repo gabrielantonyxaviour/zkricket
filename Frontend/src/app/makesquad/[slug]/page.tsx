@@ -6,6 +6,7 @@ import fetchMatchDetail from "@/utils/supabaseFunctions/fetchMatchDetails";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 export default function Page({ params }: { params: { slug: string } }) {
   const [addplr, setaddplr] = useState(false);
   const [index, setindex] = useState(0);
@@ -26,6 +27,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   };
   interface Player {
     name: string;
+    id: string;
     team:
       | "plain"
       | "csk"
@@ -45,56 +47,67 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [playerPositions, setPlayerPositions] = useState<Player[]>([
     {
       name: "Choose Player",
+      id: "",
       type: "bat",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "bat",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "bat",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "bowl",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "bowl",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "bowl",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "ar",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "ar",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "ar",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "ar",
       team: "plain",
     },
     {
       name: "Choose Player",
+      id: "",
       type: "wk",
       team: "plain",
     },
@@ -112,6 +125,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     };
     fetchTeams();
   }, []);
+
   return (
     <>
       <Addplayer
@@ -129,7 +143,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               <ArrowLeftCircleIcon className="h-10 w-10 text-black" />
             </div>
           </Link>
-          <div className=" pr-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold">
+          <div className=" px-16 py-6 sm:pt-32 lg:pr-16 text-black text-6xl font-bold ">
             {teams[0]} VS {teams[1]}
             <div className=" px-2 text-2xl font-thin">
               Fixture: {params.slug}
@@ -143,6 +157,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             open={open}
             setOpen={setOpen}
             playerPositions={playerPositions}
+            showPoints={false}
           />
         </div>
         <div className="flex items-center justify-center gap-3">

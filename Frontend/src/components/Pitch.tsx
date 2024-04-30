@@ -26,6 +26,7 @@ interface PitchProps {
   index: number;
   setindex: React.Dispatch<React.SetStateAction<number>>;
   playerPositions: Player[];
+  showPoints: boolean;
 }
 
 const Pitch: React.FC<PitchProps> = ({
@@ -34,6 +35,7 @@ const Pitch: React.FC<PitchProps> = ({
   setindex,
   index,
   playerPositions,
+  showPoints,
 }) => {
   const handlePlayerClick = (index: number) => {
     console.log("Player", index, "clicked");
@@ -57,6 +59,7 @@ const Pitch: React.FC<PitchProps> = ({
                 key={index}
                 index={index}
                 player={player}
+                showPoints={showPoints}
                 onClick={() => handlePlayerClick(index)}
               />
               <div></div>
@@ -72,6 +75,7 @@ interface PlayerImageProps {
   name: string;
   index: number;
   player: Player;
+  showPoints: boolean;
   onClick: () => void;
 }
 
@@ -124,6 +128,7 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
   name,
   index,
   player,
+  showPoints,
   onClick,
 }) => {
   const [imageUrl, setImageUrl] = useState<string>(
@@ -159,17 +164,19 @@ const PlayerImage: React.FC<PlayerImageProps> = ({
       >
         {name}
       </div>
-      <div
-        className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black rounded-md"
-        onClick={onClick}
-        style={{
-          top: `${calculateTopTextPosition(index) + 25}px`,
-          left: `${calculateLeftTextPosition(index) + 20}px`,
-        }}
-      >
-        {points[index]}
-        {"  "}Points
-      </div>
+      {showPoints && (
+        <div
+          className="absolute cursor-pointer text-xs mt-5 mr-5 px-1 bg-slate-50 text-black rounded-md"
+          onClick={onClick}
+          style={{
+            top: `${calculateTopTextPosition(index) + 25}px`,
+            left: `${calculateLeftTextPosition(index) + 20}px`,
+          }}
+        >
+          {points[index]}
+          {"  "}Points
+        </div>
+      )}
     </>
   );
 };

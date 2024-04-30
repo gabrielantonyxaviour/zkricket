@@ -5,6 +5,7 @@ import { Pixelify_Sans } from "next/font/google";
 import { request, gql } from "graphql-request";
 import fetchFixtures from "@/utils/supabaseFunctions/fetchFixtures";
 import { useAccount } from "wagmi";
+import addFixture from "@/utils/supabaseFunctions/addFixture";
 
 const pxsans = Pixelify_Sans({ subsets: ["latin"] });
 

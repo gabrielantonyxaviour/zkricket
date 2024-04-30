@@ -13,6 +13,7 @@ import { csk, rcb, rr, kkr, dc, pbks, lsg, gt, srh, mi } from "@/data/teams";
 import fetchMatchDetail from "@/utils/supabaseFunctions/fetchMatchDetails";
 interface PlayerPitch {
   name: string;
+  id: string;
   team:
     | "plain"
     | "csk"
@@ -68,10 +69,64 @@ const Addplayer: React.FC<AddPlayerProps> = ({
           teamShortForms[response[0].team1].toLowerCase(),
           teamShortForms[response[0].team2].toLowerCase(),
         ]);
+        fetchPlayers([
+          teamShortForms[response[0].team1].toLowerCase(),
+          teamShortForms[response[0].team2].toLowerCase(),
+        ]);
       }
     };
     fetchTeams();
   }, []);
+
+  const fetchPlayers = async (team: any) => {
+    if (team[0] != "") {
+      const team1 = allTeams[team[0] as keyof typeof allTeams] as any;
+      const team2 = allTeams[team[1] as keyof typeof allTeams] as any;
+
+      let gameData = JSON.parse(localStorage.getItem("gameData") || "{}");
+      let playerIds = gameData[slug];
+      if (playerIds != undefined) {
+        const matchedPlayers = playerIds.map((id: any) => {
+          const team1Player = team1.player.find(
+            (p: any) => parseInt(p.id) === id
+          );
+          const team2Player = team2.player.find(
+            (p: any) => parseInt(p.id) === id
+          );
+          return team1Player
+            ? {
+                name: team1Player.name,
+                id: team1Player.id,
+                type:
+                  team1Player.role == "Batter"
+                    ? "bat"
+                    : team1Player.role == "Bowler"
+                    ? "bowl"
+                    : team1Player.role == "Allrounder"
+                    ? "ar"
+                    : "wk",
+                team: team1.name,
+              }
+            : team2Player
+            ? {
+                name: team2Player.name,
+                id: team2Player.id,
+                type:
+                  team2Player.role == "Batter"
+                    ? "bat"
+                    : team2Player.role == "Bowler"
+                    ? "bowl"
+                    : team2Player.role == "Allrounder"
+                    ? "ar"
+                    : "wk",
+                team: team2.name,
+              }
+            : { name: "Choose Player", id: "", type: "wk", team: "plain" }; // If player not found, return null
+        });
+        setPlayerPositions(matchedPlayers);
+      }
+    }
+  };
   // const team = ["mi", "csk"];
   interface Player {
     id?: string;
@@ -97,6 +152,7 @@ const Addplayer: React.FC<AddPlayerProps> = ({
     srh: srh,
     mi: mi,
   };
+
   useEffect(() => {
     if (index === 10) {
       const team1 = allTeams[team[0] as keyof typeof allTeams];
@@ -165,6 +221,14 @@ const Addplayer: React.FC<AddPlayerProps> = ({
     }
   }, [index]);
   const updatePlayerPosition = (index: number, newPlayerData: PlayerPitch) => {
+    let gameData = JSON.parse(localStorage.getItem("gameData") || "{}");
+    if (gameData[slug] == null || gameData[slug] == undefined) {
+      gameData[slug] = Array(11).fill(0);
+    }
+    gameData[slug][index] = parseInt(newPlayerData.id);
+    console.log("GAME DATA");
+    console.log(gameData);
+    localStorage.setItem("gameData", JSON.stringify(gameData));
     setPlayerPositions((prevPositions: any) => {
       // Create a copy of the state to avoid mutation
       const updatedPositions = [...prevPositions];
@@ -306,6 +370,7 @@ const Addplayer: React.FC<AddPlayerProps> = ({
                                       onClick={() => {
                                         console.log(person);
                                         updatePlayerPosition(index, {
+                                          id: person.id as any,
                                           name: person.name,
                                           team: person.team as any,
                                           type: person.role as any,

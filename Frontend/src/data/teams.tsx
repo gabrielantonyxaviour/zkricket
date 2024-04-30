@@ -1,4 +1,5 @@
 export const csk = {
+  name: "Chennai Super Kings",
   player: [
     {
       name: "BATTERS",
@@ -220,6 +221,7 @@ export const csk = {
 };
 
 export const dc = {
+  name: "Delhi Capitals",
   player: [
     {
       name: "BATTERS",
@@ -437,6 +439,7 @@ export const dc = {
   ],
 };
 export const kkr = {
+  name: "Kolkata Knight Riders",
   player: [
     {
       name: "BATTERS",
@@ -641,6 +644,7 @@ export const kkr = {
   ],
 };
 export const gt = {
+  name: "Gujarat Titans",
   player: [
     {
       name: "BATTERS",
@@ -859,6 +863,7 @@ export const gt = {
   ],
 };
 export const lsg = {
+  name: "Lucknow Super Giants",
   player: [
     {
       name: "BATTERS",
@@ -1070,6 +1075,7 @@ export const lsg = {
   ],
 };
 export const mi = {
+  name: "Mumbai Indians",
   player: [
     {
       name: "BATTERS",
@@ -1289,6 +1295,7 @@ export const mi = {
   ],
 };
 export const pbks = {
+  name: "Punjab Kings",
   player: [
     {
       name: "BATTERS",
@@ -1506,6 +1513,7 @@ export const pbks = {
   ],
 };
 export const rcb = {
+  name: "Royal Challengers Bengaluru",
   player: [
     {
       name: "BATTERS",
@@ -1724,6 +1732,7 @@ export const rcb = {
   ],
 };
 export const rr = {
+  name: "Rajasthan Royals",
   player: [
     {
       name: "BATTERS",
@@ -1916,6 +1925,7 @@ export const rr = {
   ],
 };
 export const srh = {
+  name: "Sunrisers Hyderabad",
   player: [
     {
       name: "BATTERS",
