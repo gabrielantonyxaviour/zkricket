@@ -37,10 +37,10 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Logs() {
+export default function Logs({ logs }: { logs: any }) {
   return (
     <ul role="list" className="divide-y divide-gray-100">
-      {log.map((lg) => (
+      {logs.map((lg: any) => (
         <li
           key={lg.id}
           className="flex items-center justify-between gap-x-6 py-5"
@@ -50,26 +50,21 @@ export default function Logs() {
               <p className="text-sm font-semibold leading-6 text-gray-900">
                 {lg.hash}
               </p>
-              <p
-                className={classNames(
-                  statuses[lg.status as keyof typeof statuses],
-                  "rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset"
-                )}
-              >
-                {lg.status}
-              </p>
             </div>
             <div className="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
               <p className="truncate">{lg.username}</p>
             </div>
           </div>
           <div className="flex flex-none items-center gap-x-4">
-            <a
-              href={lg.href}
-              className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
-            >
-              View Transaction<span className="sr-only">, {lg.username}</span>
-            </a>
+            {lg.href.length > 0 && (
+              <a
+                href={lg.href}
+                target="_blank"
+                className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
+              >
+                View Transaction<span className="sr-only">, {lg.username}</span>
+              </a>
+            )}
           </div>
         </li>
       ))}

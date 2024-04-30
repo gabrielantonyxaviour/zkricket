@@ -1,5 +1,5 @@
-const oracleAddress = "";
-const protocolAddress = "";
+const oracleAddress = "0x497f5b0ae3873604ac303582b13b66d14d520e7b";
+const protocolAddress = "0x8decd86959b87c64be4978029a27d19c3e5d49de";
 const oracleAbi = [
   {
     inputs: [
@@ -793,9 +793,12 @@ const protocolAbi = [
     type: "function",
   },
 ];
+interface PlayerIdRemappings {
+  [key: string]: { [key: string]: number };
+}
 
-const playerIdRemappings = {
-  91515: {
+const playerIdRemappings: PlayerIdRemappings = {
+  "91515": {
     "702": 40,
     "1465": 10,
     "1649": 11,
@@ -847,7 +850,7 @@ const playerIdRemappings = {
     "24326": 35,
     "52418": 30,
   },
-  91555: {
+  "91555": {
     "265": 11,
     "587": 9,
     "1447": 1,
