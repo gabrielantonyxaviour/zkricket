@@ -6,8 +6,8 @@ import fetchMatchDetail from "@/utils/supabaseFunctions/fetchMatchDetails";
 import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useReadContract } from "wagmi";
 import {
+  gameResults,
   playerIdRemappings,
   protocolAbi,
   protocolAddress,
@@ -19,12 +19,16 @@ import {
   createWalletClientFromWallet,
   useDynamicContext,
 } from "@dynamic-labs/sdk-react-core";
+import { useSearchParams } from "next/navigation";
+
 export default function Page({ params }: { params: { slug: string } }) {
   const [addplr, setaddplr] = useState(false);
   const [index, setindex] = useState(0);
   const [teams, setteams] = useState<string[]>([]);
   const [logs, setLogs] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [points, setPoints] = useState([]);
+  const [totalPoints, setTotalPoints] = useState(0);
   const { primaryWallet } = useDynamicContext();
 
   const teamShortForms: { [key: string]: string } = {
@@ -137,9 +141,24 @@ export default function Page({ params }: { params: { slug: string } }) {
         ]);
       }
     };
+    let gameData = JSON.parse(localStorage.getItem("gameData") || "{}");
+    const playerIds = gameData[params.slug];
+    if (playerIds != null && playerIds != undefined) {
+      const remappedIds = playerIds.map(
+        (id: any) => playerIdRemappings[params.slug as string][id.toString()]
+      );
+      console.log(remappedIds);
+      let tPoints = 0;
+      remappedIds.forEach((id: any) => {
+        tPoints += gameResults[params.slug][id.toString()];
+      });
+      setTotalPoints(tPoints);
+    }
+
     fetchTeams();
   }, []);
 
+  const searchParams = useSearchParams();
   return (
     <>
       <Addplayer
@@ -171,7 +190,8 @@ export default function Page({ params }: { params: { slug: string } }) {
             open={open}
             setOpen={setOpen}
             playerPositions={playerPositions}
-            showPoints={false}
+            points={points}
+            showPoints={searchParams.get("claim") == "true"}
           />
         </div>
         <div className="flex items-center justify-center gap-3">
@@ -183,46 +203,18 @@ export default function Page({ params }: { params: { slug: string } }) {
                 localStorage.getItem("gameData") || "{}"
               );
               const playerIds = gameData[params.slug];
-              const remappedIds = playerIds.map(
-                (id: any) =>
-                  playerIdRemappings[params.slug as string][id.toString()]
-              );
-              console.log("Remapped Ids");
-              console.log(remappedIds);
-              let squad_hash: `0x${string}` = computeSquadHash(
-                Buffer.from(remappedIds)
-              );
-              console.log("SQUAD HASH");
-              console.log(squad_hash);
-              setLogs([
-                {
-                  id: 1,
-                  hash: "Computed Squad Hash successfully",
-                  href: "",
-                  username: squad_hash,
-                },
-              ]);
-              // send transaction on-chain
-
-              if (primaryWallet) {
-                const walletClient = await createWalletClientFromWallet(
-                  primaryWallet
+              if (playerIds != null && playerIds != undefined) {
+                const remappedIds = playerIds.map(
+                  (id: any) =>
+                    playerIdRemappings[params.slug as string][id.toString()]
                 );
-                const publicClient = createPublicClient({
-                  chain: scrollSepolia,
-                  transport: http(
-                    `https://rpc.ankr.com/scroll_sepolia_testnet/${process.env.NEXT_PUBLIC_ANKR_RPC_KEY}`
-                  ),
-                });
-                const { request } = await publicClient.simulateContract({
-                  address: protocolAddress as `0x${string}`,
-                  abi: protocolAbi,
-                  functionName: "registerSquad",
-                  args: [params.slug, squad_hash],
-                  account: primaryWallet.address as `0x${string}`,
-                });
-                const tx = await walletClient.writeContract(request);
-                console.log(tx);
+                console.log("Remapped Ids");
+                console.log(remappedIds);
+                let squad_hash: `0x${string}` = computeSquadHash(
+                  Buffer.from(remappedIds)
+                );
+                console.log("SQUAD HASH");
+                console.log(squad_hash);
                 setLogs([
                   {
                     id: 1,
@@ -230,18 +222,50 @@ export default function Page({ params }: { params: { slug: string } }) {
                     href: "",
                     username: squad_hash,
                   },
-                  {
-                    id: 1,
-                    hash: "Transaction Sent successfully",
-                    href: "https://sepolia.scrollscan.com/tx/" + tx,
-                    username: tx,
-                  },
                 ]);
+                // send transaction on-chain
+
+                if (primaryWallet) {
+                  const walletClient = await createWalletClientFromWallet(
+                    primaryWallet
+                  );
+                  const publicClient = createPublicClient({
+                    chain: scrollSepolia,
+                    transport: http(
+                      `https://rpc.ankr.com/scroll_sepolia_testnet/${process.env.NEXT_PUBLIC_ANKR_RPC_KEY}`
+                    ),
+                  });
+                  const { request } = await publicClient.simulateContract({
+                    address: protocolAddress as `0x${string}`,
+                    abi: protocolAbi,
+                    functionName: "registerSquad",
+                    args: [params.slug, squad_hash],
+                    account: primaryWallet.address as `0x${string}`,
+                  });
+                  const tx = await walletClient.writeContract(request);
+                  console.log(tx);
+                  setLogs([
+                    {
+                      id: 1,
+                      hash: "Computed Squad Hash successfully",
+                      href: "",
+                      username: squad_hash,
+                    },
+                    {
+                      id: 1,
+                      hash: "Transaction Sent successfully",
+                      href: "https://sepolia.scrollscan.com/tx/" + tx,
+                      username: tx,
+                    },
+                  ]);
+                }
               }
             }}
           >
             <p className="rounded-md shad bg-[#01A4F1] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              Submit Squad
+              {searchParams.get("claim") == "true"
+                ? "Claim Points"
+                : "Submit Squad"}
             </p>
           </button>
         </div>

@@ -26,6 +26,7 @@ interface PitchProps {
   index: number;
   setindex: React.Dispatch<React.SetStateAction<number>>;
   playerPositions: Player[];
+  points: any[];
   showPoints: boolean;
 }
 
@@ -35,6 +36,7 @@ const Pitch: React.FC<PitchProps> = ({
   setindex,
   index,
   playerPositions,
+  points,
   showPoints,
 }) => {
   const handlePlayerClick = (index: number) => {

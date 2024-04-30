@@ -904,10 +904,28 @@ const playerIdRemappings: PlayerIdRemappings = {
   },
 };
 
+interface GameResults {
+  [key: string]: number[];
+}
+
+const gameResults: GameResults = {
+  "91515": [
+    10, 97, 105, 0, 0, 14, 4, 0, 1, 39, 65, 0, 0, 0, 25, 25, 0, 0, 0, 0, 0, 0,
+    75, 0, 0, 0, 0, 0, 19, 43, 0, 0, 0, 135, 0, 0, 50, 9, 0, 156, 0, 0, 75, 0,
+    0, 25, 50, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ],
+  "91555": [
+    156, 13, 0, 0, 0, 86, 0, 0, 67, 25, 0, 9, 0, 0, 0, 0, 0, 0, 25, 50, 0, 50,
+    100, 0, 0, 0, 0, 48, 23, 0, 0, 29, 0, 15, 0, 0, 11, 25, 0, 26, 26, 25, 0, 0,
+    9, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ],
+};
+
 export {
   oracleAddress,
   protocolAbi,
   protocolAddress,
   oracleAbi,
   playerIdRemappings,
+  gameResults,
 };

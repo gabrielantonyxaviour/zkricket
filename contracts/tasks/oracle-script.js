@@ -139,7 +139,9 @@ const merkleRoot = computeMerkleRoot(padArrayWithZeros(points));
 console.log(merkleRoot);
 const returnDataHex = encodeAbiParameters(
   parseAbiParameters("bytes32, string"),
-  [merkleRoot, "pinFileToPinataResponse.data.IpfsHash"]
+  [merkleRoot, pinFileToPinataResponse.data.IpfsHash]
 );
+console.log(merkleRoot);
+console.log(pinFileToPinataResponse.data.IpfsHash);
 
 return hexToBytes(returnDataHex);
